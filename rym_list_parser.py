@@ -7,6 +7,7 @@ import file_handler
 abspath = os.path.dirname(os.path.realpath(__file__))
 source_path = 'lists/'
 
+
 class rym_list_parser(object):
     def __init__(self):
         self.config = {}
@@ -24,7 +25,7 @@ class rym_list_parser(object):
             parsed_page = self._parse_page(page)
             parsed_list.update(parsed_page)
 
-        return parsed_list
+        return self._add_leading_zeroes(parsed_list)
 
 
     def _parse_page(self, page):
@@ -80,9 +81,7 @@ class rym_list_parser(object):
 
 
     def _get_entry_no(self, entry_source):
-        entry_no = self._format_attribute(entry_source.find(class_='ooookiig').string)
-        decimals = self.config['decimals']
-        return entry_no.zfill(decimals)
+        return self._format_attribute(entry_source.find(class_='ooookiig').string)
 
 
     def _format_attribute(self, attribute):
@@ -92,8 +91,15 @@ class rym_list_parser(object):
     def _get_config(self, max_entries):
         return {
             'max_entries' : max_entries,
-            'decimals' : len(f"{max_entries}")
         }
+        
+
+    def _add_leading_zeroes(self, my_dict):
+        decimals = len(f"{len(my_dict)}")
+        new_dict = {}
+        for entry_no, entry in my_dict.items():
+            new_dict.update({entry_no.zfill(decimals) : entry})
+        return new_dict
 
 
 if __name__ == "__main__":

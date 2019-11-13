@@ -21,11 +21,11 @@ def save_to_yaml(content, file_name):
 def ordered_dump(data, file_name):
     class OrderedDumper(yaml.SafeDumper):
         pass
-    def _dict_representer(dumper, data):
+    def __dict_representer(dumper, data):
         return dumper.represent_mapping(
             yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
             data.items())
-    OrderedDumper.add_representer(OrderedDict, _dict_representer)
+    OrderedDumper.add_representer(OrderedDict, __dict_representer)
     with open(f"rym-{file_name}.yml", 'w') as outfile:
         yaml.dump(data, outfile, OrderedDumper)
         print(f"Results written to rym-{file_name}.yml")

@@ -1,798 +1,597 @@
-'1':
+'001':
   artist: Tyler, the Creator
+  release_title: Igor
   rym_id: '[Album10255382]'
-  title: Igor
-'10':
-  artist: clipping.
-  rym_id: '[Album10551933]'
-  title: There Existed an Addiction to Blood
-'101':
-  artist: Idle Hands
-  rym_id: '[Album10031385]'
-  title: Mana
-'102':
-  artist: Thank You Scientist
-  rym_id: '[Album10167466]'
-  title: Terraformer
-'103':
-  artist: Billy Woods
-  rym_id: '[Album10660705]'
-  title: Terror Management
-'104':
-  artist: The Callous Daoboys
-  rym_id: '[Album10347143]'
-  title: Die on Mars
-'105':
-  artist: The Great Old Ones
-  rym_id: '[Album10382159]'
-  title: Cosmicism
-'106':
-  artist: Kate Tempest
-  rym_id: '[Album10233920]'
-  title: The Book of Traps and Lessons
-'107':
-  artist: Sharon Van Etten
-  rym_id: '[Album9602884]'
-  title: Remind Me Tomorrow
-'108':
-  artist: Esoctrilihum
-  rym_id: '[Album10136808]'
-  title: "The Telluric Ashes of the O\u0308 Vrth Immemorial Gods"
-'109':
-  artist: Celer
-  rym_id: '[Album9950218]'
-  title: "Xi\xE8xie"
-'11':
-  artist: Danny Brown
-  rym_id: '[Album10236529]'
-  title: "uknowhatimsayin\xBF"
-'110':
-  artist: Full of Hell
-  rym_id: '[Album10064773]'
-  title: Weeping Choir
-'111':
-  artist: "V\xE9h\xE9mence"
-  rym_id: '[Album9878674]'
-  title: "Par le sang vers\xE9"
-'112':
-  artist: Orville Peck
-  rym_id: '[Album9918827]'
-  title: Pony
-'113':
-  artist: Inter Arma
-  rym_id: '[Album10006038]'
-  title: Sulphur English
-'114':
-  artist: Jamila Woods
-  rym_id: '[Album9982614]'
-  title: Legacy! Legacy!
-'115':
-  artist: Bill Callahan
-  rym_id: '[Album10243487]'
-  title: Shepherd in a Sheepskin Vest
-'116':
-  artist: Floating Points
-  rym_id: '[Album10596058]'
-  title: Crush
-'117':
-  artist: Gloo
-  rym_id: '[Album10596218]'
-  title: XYZ
-'118':
-  artist: Jay Som
-  rym_id: '[Album10341561]'
-  title: Anak Ko
-'119':
-  artist: Critical Defiance
-  rym_id: '[Album9994643]'
-  title: Misconception
-'12':
-  artist: Angel Olsen
-  rym_id: '[Album10496615]'
-  title: All Mirrors
-'120':
-  artist: American Football
-  rym_id: '[Album9810712]'
-  title: American Football
-'121':
-  artist: Funereal Presence
-  rym_id: '[Album9903592]'
-  title: Achatius
-'122':
-  artist: Daniel Lanois
-  rym_id: '[Album10075369]'
-  title: The Music of Red Dead Redemption 2 (Original Soundtrack)
-'123':
-  artist: Lurid Panacea
-  rym_id: '[Album10195707]'
-  title: The Insidious Poisons
-'124':
-  artist: John Zorn
-  rym_id: '[Album10322179]'
-  title: Nove cantici per Francesco D'Assisi
-'125':
-  artist: Andavald
-  rym_id: '[Album10281324]'
-  title: "Undir Skygg\xF0arhaldi"
-'126':
-  artist: John Arch;Jim Matheos
-  rym_id: '[Album10131528]'
-  title: Winter Ethereal
-'127':
-  artist: Gloryhammer
-  rym_id: '[Album9964293]'
-  title: Legends From Beyond the Galactic Terrorvortex
-'128':
-  artist: Leprous
-  rym_id: '[Album10590819]'
-  title: Pitfalls
-'129':
-  artist: Mefitis
-  rym_id: '[Album10555112]'
-  title: Emberdawn
-'13':
-  artist: Blood Incantation
-  rym_id: '[Album9852374]'
-  title: Hidden History of the Human Race
-'130':
-  artist: Mdou Moctar
-  rym_id: '[Album10031125]'
-  title: 'Ilana: The Creator'
-'131':
-  artist: Ian Noe
-  rym_id: '[Album10313817]'
-  title: Between the Country
-'132':
-  artist: Counterparts
-  rym_id: '[Album10590522]'
-  title: Nothing Left to Love
-'133':
-  artist: In Mourning
-  rym_id: '[Album10412484]'
-  title: Garden of Storms
-'134':
-  artist: EABS
-  rym_id: '[Album10107592]'
-  title: Slavic Spirits
-'135':
-  artist: "Sk\xE1phe;Wormlust"
-  rym_id: '[Album10277568]'
-  title: "Kosm\xEDskur hryllingur"
-'136':
-  artist: Opeth
-  rym_id: '[Album10470357]'
-  title: In cauda venenum
-'137':
-  artist: "Alt\u0131n G\xFCn"
-  rym_id: '[Album10008646]'
-  title: Gece
-'138':
-  artist: Kelsey Lu
-  rym_id: '[Album10114728]'
-  title: Blood
-'139':
-  artist: Lord Vicar
-  rym_id: '[Album10082510]'
-  title: The Black Powder
-'14':
-  artist: Esoteric
-  rym_id: '[Album10516006]'
-  title: A Pyrrhic Existence
-'140':
-  artist: Deus Mortem
-  rym_id: '[Album10080122]'
-  title: Kosmocide
-'141':
-  artist: The Caretaker
-  rym_id: '[Album10096758]'
-  title: Everywhere, an Empty Bliss
-'142':
-  artist: Saor
-  rym_id: '[Album9531011]'
-  title: Forgotten Paths
-'143':
-  artist: Solange
-  rym_id: '[Album10055079]'
-  title: When I Get Home
-'144':
-  artist: Knocked Loose
-  rym_id: '[Album10306975]'
-  title: A Different Shade of Blue
-'145':
-  artist: Stella Donnelly
-  rym_id: '[Album9895906]'
-  title: Beware of the Dogs
-'146':
-  artist: Weeping Sores
-  rym_id: '[Album10491318]'
-  title: False Confession
-'147':
-  artist: Black to Comm
-  rym_id: '[Album9719597]'
-  title: Seven Horses for Seven Kings
-'148':
-  artist: Atlantean Kodex
-  rym_id: '[Album10494426]'
-  title: The Course of Empire
-'149':
-  artist: Fennesz
-  rym_id: '[Album9921410]'
-  title: Agora
-'15':
-  artist: LINGUA IGNOTA
-  rym_id: '[Album10296387]'
-  title: Caligula
-'150':
-  artist: Arnaut Pavle
-  rym_id: '[Album10494507]'
-  title: Arnaut Pavle
-'151':
-  artist: Kim Petras
-  rym_id: '[Album10617860]'
-  title: Turn Off the Light
-'152':
-  artist: Borknagar
-  rym_id: '[Album10388795]'
-  title: True North
-'153':
-  artist: Allegaeon
-  rym_id: '[Album9967381]'
-  title: Apoptosis
-'154':
-  artist: White Ward
-  rym_id: '[Album10191463]'
-  title: Love Exchange Failure
-'155':
-  artist: Mabe Fratti
-  rym_id: '[Album10333961]'
-  title: Pies sobre la tierra
-'156':
-  artist: Maquinas
-  rym_id: '[Album10622249]'
-  title: "O C\xE3o de Toda Noite"
-'157':
-  artist: Patrick Watson
-  rym_id: '[Album10620175]'
-  title: Wave
-'158':
-  artist: Patricia Taxxon
-  rym_id: '[Album10777893]'
-  title: Foley Artist
-'159':
-  artist: "\u7070\u91CE\u656C\u4E8C [Keiji Haino];Merzbow;Bal\xE1zs P\xE1ndi"
-  rym_id: '[Album10547985]'
-  title: "\u767A\u898B\u3059\u308B\u8005\u3067\u306F\u306A\u304F\u767A\u898B\u3055\
-    \u308C\u308B\u8005\u3068\u306A\u308C (Become the Discovered, Not the Discoverer)"
-'16':
-  artist: Purple Mountains
-  rym_id: '[Album10290521]'
-  title: Purple Mountains
-'160':
-  artist: Lukas Rickli
-  rym_id: '[Album10125195]'
-  title: Fremde Zeit Addendum 5
-'161':
-  artist: Moron Police
-  rym_id: '[Album10441769]'
-  title: A Boat on the Sea
-'162':
-  artist: Witch Vomit
-  rym_id: '[Album10404008]'
-  title: Buried Deep in a Bottomless Grave
-'163':
-  artist: Fontaines D.C.
-  rym_id: '[Album9987925]'
-  title: Dogrel
-'164':
-  artist: Soen
-  rym_id: '[Album9706391]'
-  title: Lotus
-'165':
-  artist: Inculter
-  rym_id: '[Album9960078]'
-  title: Fatal Visions
-'166':
-  artist: Saba Alizadeh
-  rym_id: '[Album9964587]'
-  title: Scattered Memories
-'167':
-  artist: Steel Tube Room
-  rym_id: '[Album10538659]'
-  title: FOSCO 6EQUJ5
-'168':
-  artist: La Dispute
-  rym_id: '[Album9792698]'
-  title: Panorama
-'169':
-  artist: Wiki
-  rym_id: '[Album10793673]'
-  title: OOFIE
-'17':
-  artist: Cult of Luna
-  rym_id: '[Album10512932]'
-  title: A Dawn to Fear
-'170':
-  artist: Matmos
-  rym_id: '[Album9819640]'
-  title: Plastic Anniversary
-'171':
-  artist: Sadistic Ritual
-  rym_id: '[Album10181234]'
-  title: Visionaire of Death
-'172':
-  artist: Shinichiro Yokota
-  rym_id: '[Album10343842]'
-  title: I Know You Like It
-'173':
-  artist: Hath
-  rym_id: '[Album9924824]'
-  title: Of Rot and Ruin
-'174':
-  artist: Turilli / Lione Rhapsody
-  rym_id: '[Album10271078]'
-  title: Zero Gravity (Rebirth and Evolution)
-'175':
-  artist: The Claypool Lennon Delirium
-  rym_id: '[Album9676041]'
-  title: South of Reality
-'176':
-  artist: Tool
-  rym_id: '[Album10508975]'
-  title: Fear Inoculum
-'177':
-  artist: Men I Trust
-  rym_id: '[Album9803740]'
-  title: Oncle Jazz
-'178':
-  artist: Kevin and the Bikes
-  rym_id: '[Album9889112]'
-  title: Dorkcore 101
-'179':
-  artist: Eclipse
-  rym_id: '[Album10393324]'
-  title: Paradigm
-'18':
-  artist: Lightning Bolt
-  rym_id: '[Album10516784]'
-  title: Sonic Citadel
-'180':
-  artist: "\u0160irom"
-  rym_id: '[Album10402437]'
-  title: A Universe that Roasts Blossoms for a Horse
-'181':
-  artist: Lingua Nada
-  rym_id: '[Album10224620]'
-  title: Djinn
-'182':
-  artist: Jessica Pratt
-  rym_id: '[Album9678909]'
-  title: Quiet Signs
-'183':
-  artist: Vampire Weekend
-  rym_id: '[Album9922994]'
-  title: Father of the Bride
-'184':
-  artist: Sinmara
-  rym_id: '[Album9933877]'
-  title: "Hv\xEDsl stjarnanna"
-'185':
-  artist: Oh Sees
-  rym_id: '[Album10406489]'
-  title: Face Stabber
-'186':
-  artist: None
-  rym_id: '[Album10071301]'
-  title: Cairn
-'187':
-  artist: "Touch\xE9 Amor\xE9"
-  rym_id: '[Album10456324]'
-  title: Dead Horse X
-'188':
-  artist: DIIV
-  rym_id: '[Album10490786]'
-  title: Deceiver
-'189':
-  artist: Vastum
-  rym_id: '[Album10517832]'
-  title: Orificial Purge
-'19':
-  artist: The Caretaker
-  rym_id: '[Album9151198]'
-  title: Everywhere at the End of Time - Stage 6
-'190':
-  artist: Shin Guard
-  rym_id: '[Album10009854]'
-  title: '2020'
-'191':
-  artist: Skyzoo;Pete Rock
-  rym_id: '[Album10549773]'
-  title: Retropolitan
-'192':
-  artist: Disentomb
-  rym_id: '[Album10275767]'
-  title: The Decaying Light
-'193':
-  artist: Sadness
-  rym_id: '[Album10165387]'
-  title: I Want to Be There
-'194':
-  artist: Spirit Adrift
-  rym_id: '[Album9947504]'
-  title: Divided by Darkness
-'195':
-  artist: Elza Soares
-  rym_id: '[Album10446373]'
-  title: Planeta fome
-'196':
-  artist: Sunn O)))
-  rym_id: '[Album9981717]'
-  title: Life Metal
-'197':
-  artist: Mayhem
-  rym_id: '[Album10548358]'
-  title: Daemon
-'198':
-  artist: Beast in Black
-  rym_id: '[Album9659087]'
-  title: From Hell With Love
-'199':
-  artist: Chromatics
-  rym_id: '[Album9259235]'
-  title: Closer to Grey
-'2':
+'002':
   artist: Weyes Blood
+  release_title: Titanic Rising
   rym_id: '[Album9999224]'
-  title: Titanic Rising
-'20':
-  artist: Kai Whiston
-  rym_id: '[Album10727741]'
-  title: No World As Good As Mine
-'200':
-  artist: Hatchie
-  rym_id: '[Album10047862]'
-  title: Keepsake
-'21':
-  artist: Nick Cave and The Bad Seeds
-  rym_id: '[Album10671471]'
-  title: Ghosteen
-'22':
-  artist: Jai Paul
-  rym_id: '[Album10334937]'
-  title: Leak 04-13 (Bait Ones)
-'23':
-  artist: Mount Eerie;Julie Doiron
-  rym_id: '[Album10677379]'
-  title: Lost Wisdom Pt. 2
-'24':
-  artist: Billy Woods;Kenny Segal
-  rym_id: '[Album10059347]'
-  title: Hiding Places
-'25':
-  artist: The Comet Is Coming
-  rym_id: '[Album9923936]'
-  title: Trust in the Lifeforce of the Deep Mystery
-'26':
-  artist: (Sandy) Alex G
-  rym_id: '[Album10341556]'
-  title: House of Sugar
-'27':
-  artist: "Mg\u0142a"
-  rym_id: '[Album10522934]'
-  title: Age of Excuse
-'28':
-  artist: Caroline Polachek
-  rym_id: '[Album10493444]'
-  title: Pang
-'29':
-  artist: Serpent Column
-  rym_id: '[Album10496838]'
-  title: Mirror in Darkness
-'3':
+'003':
   artist: FKA twigs
+  release_title: Magdalene
   rym_id: '[Album10610710]'
-  title: Magdalene
-'30':
-  artist: Carly Rae Jepsen
-  rym_id: '[Album10146828]'
-  title: Dedicated
-'31':
-  artist: Michael Kiwanuka
-  rym_id: '[Album10552041]'
-  title: Kiwanuka
-'32':
-  artist: Weatherday
-  rym_id: '[Album10234335]'
-  title: Come In
-'33':
-  artist: Injury Reserve
-  rym_id: '[Album10018566]'
-  title: Injury Reserve
-'34':
-  artist: Wilderun
-  rym_id: '[Album10629129]'
-  title: Veil of Imagination
-'35':
-  artist: Richard Dawson
-  rym_id: '[Album10516472]'
-  title: '2020'
-'36':
-  artist: "Hildur Gu\xF0nad\xF3ttir"
-  rym_id: '[Album10332599]'
-  title: Chernobyl
-'37':
-  artist: '3776'
-  rym_id: '[Album10503320]'
-  title: "\u6B73\u6642\u8A18 (Saijiki)"
-'38':
-  artist: None
-  rym_id: '[Album10078079]'
-  title: Itekoma Hits
-'39':
-  artist: Tomb Mold
-  rym_id: '[Album10020313]'
-  title: Planetary Clairvoyance
-'4':
+'004':
   artist: Freddie Gibbs & Madlib
+  release_title: Bandana
   rym_id: '[Album7381150]'
-  title: Bandana
-'40':
-  artist: King Gizzard and the Lizard Wizard
-  rym_id: '[Album10392899]'
-  title: Infest the Rats' Nest
-'41':
-  artist: Tropical Fuck Storm
-  rym_id: '[Album10382879]'
-  title: Braindrops
-'42':
-  artist: Thom Yorke
-  rym_id: '[Album10391259]'
-  title: ANIMA
-'43':
-  artist: Deathspell Omega
-  rym_id: '[Album10244123]'
-  title: The Furnaces of Palingenesia
-'44':
-  artist: Fire! Orchestra
-  rym_id: '[Album10193627]'
-  title: Arrival
-'45':
-  artist: Magma
-  rym_id: '[Album10172776]'
-  title: "Z\xEBss : Le jour du n\xE9ant"
-'46':
-  artist: Blut aus Nord
-  rym_id: '[Album10537120]'
-  title: Hallucinogen
-'47':
-  artist: Alcest
-  rym_id: '[Album10406484]'
-  title: Spiritual Instinct
-'48':
-  artist: Charli XCX
-  rym_id: '[Album10369114]'
-  title: Charli
-'49':
-  artist: Waste of Space Orchestra
-  rym_id: '[Album9837594]'
-  title: Syntheosis
-'5':
+'005':
   artist: JPEGMAFIA
+  release_title: All My Heroes Are Cornballs
   rym_id: '[Album10596352]'
-  title: All My Heroes Are Cornballs
-'50':
+'006':
+  artist: Little Simz
+  release_title: Grey Area
+  rym_id: '[Album9919011]'
+'007':
+  artist: Lana Del Rey
+  release_title: Norman Fucking Rockwell!
+  rym_id: '[Album9574303]'
+008:
+  artist: black midi
+  release_title: Schlagenheim
+  rym_id: '[Album10278077]'
+009:
+  artist: Swans
+  release_title: Leaving Meaning.
+  rym_id: '[Album10619456]'
+'010':
+  artist: clipping.
+  release_title: There Existed an Addiction to Blood
+  rym_id: '[Album10551933]'
+'011':
+  artist: Danny Brown
+  release_title: "uknowhatimsayin\xBF"
+  rym_id: '[Album10236529]'
+'012':
+  artist: Angel Olsen
+  release_title: All Mirrors
+  rym_id: '[Album10496615]'
+'013':
+  artist: Blood Incantation
+  release_title: Hidden History of the Human Race
+  rym_id: '[Album9852374]'
+'014':
+  artist: Esoteric
+  release_title: A Pyrrhic Existence
+  rym_id: '[Album10516006]'
+'015':
+  artist: LINGUA IGNOTA
+  release_title: Caligula
+  rym_id: '[Album10296387]'
+'016':
+  artist: Purple Mountains
+  release_title: Purple Mountains
+  rym_id: '[Album10290521]'
+'017':
+  artist: Cult of Luna
+  release_title: A Dawn to Fear
+  rym_id: '[Album10512932]'
+018:
+  artist: Lightning Bolt
+  release_title: Sonic Citadel
+  rym_id: '[Album10516784]'
+019:
+  artist: The Caretaker
+  release_title: Everywhere at the End of Time - Stage 6
+  rym_id: '[Album9151198]'
+'020':
+  artist: Kai Whiston
+  release_title: No World As Good As Mine
+  rym_id: '[Album10727741]'
+'021':
+  artist: Nick Cave and The Bad Seeds
+  release_title: Ghosteen
+  rym_id: '[Album10671471]'
+'022':
+  artist: Jai Paul
+  release_title: Leak 04-13 (Bait Ones)
+  rym_id: '[Album10334937]'
+'023':
+  artist: Mount Eerie;Julie Doiron
+  release_title: Lost Wisdom Pt. 2
+  rym_id: '[Album10677379]'
+'024':
+  artist: Billy Woods;Kenny Segal
+  release_title: Hiding Places
+  rym_id: '[Album10059347]'
+'025':
+  artist: The Comet Is Coming
+  release_title: Trust in the Lifeforce of the Deep Mystery
+  rym_id: '[Album9923936]'
+'026':
+  artist: (Sandy) Alex G
+  release_title: House of Sugar
+  rym_id: '[Album10341556]'
+'027':
+  artist: "Mg\u0142a"
+  release_title: Age of Excuse
+  rym_id: '[Album10522934]'
+028:
+  artist: Caroline Polachek
+  release_title: Pang
+  rym_id: '[Album10493444]'
+029:
+  artist: Serpent Column
+  release_title: Mirror in Darkness
+  rym_id: '[Album10496838]'
+'030':
+  artist: Carly Rae Jepsen
+  release_title: Dedicated
+  rym_id: '[Album10146828]'
+'031':
+  artist: Michael Kiwanuka
+  release_title: Kiwanuka
+  rym_id: '[Album10552041]'
+'032':
+  artist: Weatherday
+  release_title: Come In
+  rym_id: '[Album10234335]'
+'033':
+  artist: Injury Reserve
+  release_title: Injury Reserve
+  rym_id: '[Album10018566]'
+'034':
+  artist: Wilderun
+  release_title: Veil of Imagination
+  rym_id: '[Album10629129]'
+'035':
+  artist: Richard Dawson
+  release_title: '2020'
+  rym_id: '[Album10516472]'
+'036':
+  artist: "Hildur Gu\xF0nad\xF3ttir"
+  release_title: Chernobyl
+  rym_id: '[Album10332599]'
+'037':
+  artist: '3776'
+  release_title: "\u6B73\u6642\u8A18 (Saijiki)"
+  rym_id: '[Album10503320]'
+038:
+  artist: None
+  release_title: Itekoma Hits
+  rym_id: '[Album10078079]'
+039:
+  artist: Tomb Mold
+  release_title: Planetary Clairvoyance
+  rym_id: '[Album10020313]'
+'040':
+  artist: King Gizzard and the Lizard Wizard
+  release_title: Infest the Rats' Nest
+  rym_id: '[Album10392899]'
+'041':
+  artist: Tropical Fuck Storm
+  release_title: Braindrops
+  rym_id: '[Album10382879]'
+'042':
+  artist: Thom Yorke
+  release_title: ANIMA
+  rym_id: '[Album10391259]'
+'043':
+  artist: Deathspell Omega
+  release_title: The Furnaces of Palingenesia
+  rym_id: '[Album10244123]'
+'044':
+  artist: Fire! Orchestra
+  release_title: Arrival
+  rym_id: '[Album10193627]'
+'045':
+  artist: Magma
+  release_title: "Z\xEBss : Le jour du n\xE9ant"
+  rym_id: '[Album10172776]'
+'046':
+  artist: Blut aus Nord
+  release_title: Hallucinogen
+  rym_id: '[Album10537120]'
+'047':
+  artist: Alcest
+  release_title: Spiritual Instinct
+  rym_id: '[Album10406484]'
+048:
+  artist: Charli XCX
+  release_title: Charli
+  rym_id: '[Album10369114]'
+049:
+  artist: Waste of Space Orchestra
+  release_title: Syntheosis
+  rym_id: '[Album9837594]'
+'050':
   artist: Uboa
+  release_title: The Origin of My Depression
   rym_id: '[Album10003476]'
-  title: The Origin of My Depression
-'51':
+'051':
   artist: Mavi
+  release_title: Let the Sun Talk
   rym_id: '[Album10699790]'
-  title: Let the Sun Talk
-'52':
+'052':
   artist: Matana Roberts
+  release_title: 'Coin Coin Chapter Four: Memphis'
   rym_id: '[Album10386673]'
-  title: 'Coin Coin Chapter Four: Memphis'
-'53':
+'053':
   artist: Quelle Chris
+  release_title: Guns
   rym_id: '[Album10006940]'
-  title: Guns
-'54':
+'054':
   artist: "Antoine Beuger;J\xFCrg Frey;Marcus Kaiser;Radu Malfatti;Andr\xE9 O. M\xF6\
     ller;Kathryn Pisaro;Michael Pisaro"
+  release_title: Nature Denatured and Found Again
   rym_id: '[Album9755583]'
-  title: Nature Denatured and Found Again
-'55':
+'055':
   artist: "Ana Frango El\xE9trico"
+  release_title: Little Electric Chicken Heart
   rym_id: '[Album10612921]'
-  title: Little Electric Chicken Heart
-'56':
+'056':
   artist: Big Thief
+  release_title: Two Hands
   rym_id: '[Album10547136]'
-  title: Two Hands
-'57':
+'057':
   artist: Cloud Rat
+  release_title: Pollinator
   rym_id: '[Album10508406]'
-  title: Pollinator
-'58':
+058:
   artist: Galneryus
+  release_title: Into the Purgatory
   rym_id: '[Album10605866]'
-  title: Into the Purgatory
-'59':
+059:
   artist: Insomnium
+  release_title: Heart Like a Grave
   rym_id: '[Album10470527]'
-  title: Heart Like a Grave
-'6':
-  artist: Little Simz
-  rym_id: '[Album9919011]'
-  title: Grey Area
-'60':
+'060':
   artist: Have a Nice Life
+  release_title: Sea of Worry
   rym_id: '[Album10115248]'
-  title: Sea of Worry
-'61':
+'061':
   artist: Big Thief
+  release_title: U.F.O.F.
   rym_id: '[Album10049230]'
-  title: U.F.O.F.
-'62':
+'062':
   artist: Anderson .Paak
+  release_title: Ventura
   rym_id: '[Album10052961]'
-  title: Ventura
-'63':
+'063':
   artist: Opeth
+  release_title: In cauda venenum
   rym_id: '[Album10470378]'
-  title: In cauda venenum
-'64':
+'064':
   artist: Bobby Krlic
+  release_title: Midsommar
   rym_id: '[Album10388209]'
-  title: Midsommar
-'65':
+'065':
   artist: "Mis\xFEyrming"
+  release_title: Algleymi
   rym_id: '[Album10228391]'
-  title: Algleymi
-'66':
+'066':
   artist: Slauson Malone
+  release_title: "A Quiet Farwell, 2016\u20132018"
   rym_id: '[Album10192846]'
-  title: "A Quiet Farwell, 2016\u20132018"
-'67':
+'067':
   artist: Mortiferum
+  release_title: Disgorged From Psychotic Depths
   rym_id: '[Album10548392]'
-  title: Disgorged From Psychotic Depths
-'68':
+068:
   artist: PUP
+  release_title: Morbid Stuff
   rym_id: '[Album9903381]'
-  title: Morbid Stuff
-'69':
+069:
   artist: Durand Jones & The Indications
+  release_title: American Love Call
   rym_id: '[Album9781438]'
-  title: American Love Call
-'7':
-  artist: Lana Del Rey
-  rym_id: '[Album9574303]'
-  title: Norman Fucking Rockwell!
-'70':
+'070':
   artist: SOPHIE
+  release_title: Oil of Every Pearl's Un-Insides Remix Album (Non Stop)
   rym_id: '[Album10509606]'
-  title: Oil of Every Pearl's Un-Insides Remix Album (Non Stop)
-'71':
+'071':
   artist: None
+  release_title: "\u041F\u0430\u043D\u0438\u0445\u0438\u0434\u0430 (Panihida)"
   rym_id: '[Album10271057]'
-  title: "\u041F\u0430\u043D\u0438\u0445\u0438\u0434\u0430 (Panihida)"
-'72':
+'072':
   artist: Xiu Xiu
+  release_title: Girl With Basket of Fruit
   rym_id: '[Album9675839]'
-  title: Girl With Basket of Fruit
-'73':
+'073':
   artist: slowthai
+  release_title: Nothing Great About Britain
   rym_id: '[Album10029722]'
-  title: Nothing Great About Britain
-'74':
+'074':
   artist: Glass Beach
+  release_title: The First Glass Beach Album
   rym_id: '[Album10310234]'
-  title: The First Glass Beach Album
-'75':
+'075':
   artist: Disillusion
+  release_title: The Liberation
   rym_id: '[Album10433764]'
-  title: The Liberation
-'76':
+'076':
   artist: Denzel Curry
+  release_title: Zuu
   rym_id: '[Album10302259]'
-  title: Zuu
-'77':
+'077':
   artist: Blanck Mass
+  release_title: Animated Violence Mild
   rym_id: '[Album10341668]'
-  title: Animated Violence Mild
-'78':
+078:
   artist: None
+  release_title: "\uC628\uB2E4 (Onda)"
   rym_id: '[Album9868780]'
-  title: "\uC628\uB2E4 (Onda)"
-'79':
+079:
   artist: A Winged Victory for the Sullen
+  release_title: The Undivided Five
   rym_id: '[Album10674634]'
-  title: The Undivided Five
-'8':
-  artist: black midi
-  rym_id: '[Album10278077]'
-  title: Schlagenheim
-'80':
+080:
   artist: Car Bomb
+  release_title: Mordial
   rym_id: '[Album10498706]'
-  title: Mordial
-'81':
+081:
   artist: No One Knows What the Dead Think
+  release_title: No One Knows What the Dead Think
   rym_id: '[Album10125905]'
-  title: No One Knows What the Dead Think
-'82':
+082:
   artist: Gruzja
+  release_title: "Jeszcze nie mamy na was pomys\u0142u"
   rym_id: '[Album10652725]'
-  title: "Jeszcze nie mamy na was pomys\u0142u"
-'83':
+083:
   artist: Gang Starr
+  release_title: One of the Best Yet
   rym_id: '[Album10744887]'
-  title: One of the Best Yet
-'84':
+084:
   artist: Tim Hecker
+  release_title: Anoyo
   rym_id: '[Album10005932]'
-  title: Anoyo
-'85':
+085:
   artist: Jenny Hval
+  release_title: The Practice of Love
   rym_id: '[Album10450717]'
-  title: The Practice of Love
-'86':
+086:
   artist: Teitanblood
+  release_title: The Baneful Choir
   rym_id: '[Album10120908]'
-  title: The Baneful Choir
-'87':
+087:
   artist: "Hildur Gu\xF0nad\xF3ttir"
+  release_title: Joker
   rym_id: '[Album10660793]'
-  title: Joker
-'88':
+088:
   artist: LCD Soundsystem
+  release_title: Electric Lady Sessions
   rym_id: '[Album9705589]'
-  title: Electric Lady Sessions
-'89':
+089:
   artist: Yellow Eyes
+  release_title: Rare Field Ceiling
   rym_id: '[Album10155918]'
-  title: Rare Field Ceiling
-'9':
-  artist: Swans
-  rym_id: '[Album10619456]'
-  title: Leaving Meaning.
-'90':
+090:
   artist: Little Brother
+  release_title: May the Lord Watch
   rym_id: '[Album10569791]'
-  title: May the Lord Watch
-'91':
+091:
   artist: State Faults
+  release_title: Clairvoyant
   rym_id: '[Album10194505]'
-  title: Clairvoyant
-'92':
+092:
   artist: "Jordsj\xF8"
+  release_title: Nattfiolen
   rym_id: '[Album10249325]'
-  title: Nattfiolen
-'93':
+093:
   artist: Kali Malone
+  release_title: The Sacrificial Code
   rym_id: '[Album10412271]'
-  title: The Sacrificial Code
-'94':
+094:
   artist: Bent Knee
+  release_title: You Know What They Mean
   rym_id: '[Album10559943]'
-  title: You Know What They Mean
-'95':
+095:
   artist: DJ Armok;DJ Bishop;Pillbox
+  release_title: 'Dungeon Rap: The Introduction'
   rym_id: '[Album10114446]'
-  title: 'Dungeon Rap: The Introduction'
-'96':
+096:
   artist: IQ
+  release_title: Resistance
   rym_id: '[Album10448938]'
-  title: Resistance
-'97':
+097:
   artist: Devourment
+  release_title: Obscene Majesty
   rym_id: '[Album10382044]'
-  title: Obscene Majesty
-'98':
+098:
   artist: Malibu Ken
+  release_title: Malibu Ken
   rym_id: '[Album9753848]'
-  title: Malibu Ken
-'99':
+099:
   artist: Krypts
+  release_title: Cadaver Circulation
   rym_id: '[Album10006180]'
-  title: Cadaver Circulation
+'101':
+  artist: Idle Hands
+  release_title: Mana
+  rym_id: '[Album10031385]'
+'102':
+  artist: Thank You Scientist
+  release_title: Terraformer
+  rym_id: '[Album10167466]'
+'103':
+  artist: Billy Woods
+  release_title: Terror Management
+  rym_id: '[Album10660705]'
+'104':
+  artist: The Callous Daoboys
+  release_title: Die on Mars
+  rym_id: '[Album10347143]'
+'105':
+  artist: The Great Old Ones
+  release_title: Cosmicism
+  rym_id: '[Album10382159]'
+'106':
+  artist: Kate Tempest
+  release_title: The Book of Traps and Lessons
+  rym_id: '[Album10233920]'
+'107':
+  artist: Sharon Van Etten
+  release_title: Remind Me Tomorrow
+  rym_id: '[Album9602884]'
+'108':
+  artist: Esoctrilihum
+  release_title: "The Telluric Ashes of the O\u0308 Vrth Immemorial Gods"
+  rym_id: '[Album10136808]'
+'109':
+  artist: Celer
+  release_title: "Xi\xE8xie"
+  rym_id: '[Album9950218]'
+'110':
+  artist: Full of Hell
+  release_title: Weeping Choir
+  rym_id: '[Album10064773]'
+'111':
+  artist: "V\xE9h\xE9mence"
+  release_title: "Par le sang vers\xE9"
+  rym_id: '[Album9878674]'
+'112':
+  artist: Orville Peck
+  release_title: Pony
+  rym_id: '[Album9918827]'
+'113':
+  artist: Inter Arma
+  release_title: Sulphur English
+  rym_id: '[Album10006038]'
+'114':
+  artist: Jamila Woods
+  release_title: Legacy! Legacy!
+  rym_id: '[Album9982614]'
+'115':
+  artist: Bill Callahan
+  release_title: Shepherd in a Sheepskin Vest
+  rym_id: '[Album10243487]'
+'116':
+  artist: Floating Points
+  release_title: Crush
+  rym_id: '[Album10596058]'
+'117':
+  artist: Gloo
+  release_title: XYZ
+  rym_id: '[Album10596218]'
+'118':
+  artist: Jay Som
+  release_title: Anak Ko
+  rym_id: '[Album10341561]'
+'119':
+  artist: Critical Defiance
+  release_title: Misconception
+  rym_id: '[Album9994643]'
+'120':
+  artist: American Football
+  release_title: American Football
+  rym_id: '[Album9810712]'
+'121':
+  artist: Funereal Presence
+  release_title: Achatius
+  rym_id: '[Album9903592]'
+'122':
+  artist: Daniel Lanois
+  release_title: The Music of Red Dead Redemption 2 (Original Soundtrack)
+  rym_id: '[Album10075369]'
+'123':
+  artist: Lurid Panacea
+  release_title: The Insidious Poisons
+  rym_id: '[Album10195707]'
+'124':
+  artist: John Zorn
+  release_title: Nove cantici per Francesco D'Assisi
+  rym_id: '[Album10322179]'
+'125':
+  artist: Andavald
+  release_title: "Undir Skygg\xF0arhaldi"
+  rym_id: '[Album10281324]'
+'126':
+  artist: John Arch;Jim Matheos
+  release_title: Winter Ethereal
+  rym_id: '[Album10131528]'
+'127':
+  artist: Gloryhammer
+  release_title: Legends From Beyond the Galactic Terrorvortex
+  rym_id: '[Album9964293]'
+'128':
+  artist: Leprous
+  release_title: Pitfalls
+  rym_id: '[Album10590819]'
+'129':
+  artist: Mefitis
+  release_title: Emberdawn
+  rym_id: '[Album10555112]'
+'130':
+  artist: Mdou Moctar
+  release_title: 'Ilana: The Creator'
+  rym_id: '[Album10031125]'
+'131':
+  artist: Ian Noe
+  release_title: Between the Country
+  rym_id: '[Album10313817]'
+'132':
+  artist: Counterparts
+  release_title: Nothing Left to Love
+  rym_id: '[Album10590522]'
+'133':
+  artist: In Mourning
+  release_title: Garden of Storms
+  rym_id: '[Album10412484]'
+'134':
+  artist: EABS
+  release_title: Slavic Spirits
+  rym_id: '[Album10107592]'
+'135':
+  artist: "Sk\xE1phe;Wormlust"
+  release_title: "Kosm\xEDskur hryllingur"
+  rym_id: '[Album10277568]'
+'136':
+  artist: Opeth
+  release_title: In cauda venenum
+  rym_id: '[Album10470357]'
+'137':
+  artist: "Alt\u0131n G\xFCn"
+  release_title: Gece
+  rym_id: '[Album10008646]'
+'138':
+  artist: Kelsey Lu
+  release_title: Blood
+  rym_id: '[Album10114728]'
+'139':
+  artist: Lord Vicar
+  release_title: The Black Powder
+  rym_id: '[Album10082510]'
+'140':
+  artist: Deus Mortem
+  release_title: Kosmocide
+  rym_id: '[Album10080122]'
+'141':
+  artist: The Caretaker
+  release_title: Everywhere, an Empty Bliss
+  rym_id: '[Album10096758]'
+'142':
+  artist: Saor
+  release_title: Forgotten Paths
+  rym_id: '[Album9531011]'
+'143':
+  artist: Solange
+  release_title: When I Get Home
+  rym_id: '[Album10055079]'
+'144':
+  artist: Knocked Loose
+  release_title: A Different Shade of Blue
+  rym_id: '[Album10306975]'
+'145':
+  artist: Stella Donnelly
+  release_title: Beware of the Dogs
+  rym_id: '[Album9895906]'
+'146':
+  artist: Weeping Sores
+  release_title: False Confession
+  rym_id: '[Album10491318]'
+'147':
+  artist: Black to Comm
+  release_title: Seven Horses for Seven Kings
+  rym_id: '[Album9719597]'
+'148':
+  artist: Atlantean Kodex
+  release_title: The Course of Empire
+  rym_id: '[Album10494426]'
+'149':
+  artist: Fennesz
+  release_title: Agora
+  rym_id: '[Album9921410]'
+'150':
+  artist: Arnaut Pavle
+  release_title: Arnaut Pavle
+  rym_id: '[Album10494507]'

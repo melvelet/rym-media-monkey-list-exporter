@@ -64,6 +64,6 @@ if __name__ == "__main__":
     mmde = mm_database_editor()
     artist = "Depeche Mode"
     album = "Violator"
-    rym_id = "Album123456"
+    rym_id = "Album12346"
     mmde.process_album(artist, album, rym_id)
     mmde.commit_and_close()

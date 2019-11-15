@@ -22,7 +22,7 @@ class rym_list_parser(object):
         parsed_list = {}
         for file in glob.glob("*.html"):
             page = file_handler.open_html(file)
-            parsed_page = self._parse_page(page)
+            parsed_page = self.__parse_page(page)
             parsed_list.update(parsed_page)
 
         return self.__add_leading_zeroes(parsed_list)

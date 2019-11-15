@@ -25,8 +25,8 @@ class mm_database_editor(object):
 
 
     def __get_songs_from_album_string(self, artist, album):
-        self.c.execute("SELECT ID, SongTitle FROM main.Songs WHERE Artist LIKE ? \
-            AND Album LIKE ? ORDER BY _rowid_ ASC LIMIT 0, 50000;", [artist, album])
+        self.c.execute("SELECT ID, SongTitle FROM main.Songs WHERE Artist LIKE ? AND Album LIKE ?;",
+            [artist, album])
         return self.c.fetchall()
 
 
@@ -37,7 +37,6 @@ class mm_database_editor(object):
 
     def __write_rym_to_db(self, songs, rym_id):
         ids = self.__get_mm_ids(songs)
-        [(self.id_field, rym_id, id_[0]) for id_ in ids]
         self.c.executemany(f"UPDATE main.Songs SET {self.id_field} = ? WHERE _rowid_ = ?",
             [(rym_id, id_[0]) for id_ in ids])
 
@@ -81,7 +80,6 @@ class mm_database_editor(object):
         self.c.execute(f"SELECT _rowid_ FROM main.PlaylistSongs WHERE IDPlaylist = ?;", [playlist_id])
         ids = self.c.fetchall()
         if ids:
-            # self.c.execute(f"DELETE FROM main.Playlists WHERE _rowid_ = ?;", [ids[0][0]])
             self.c.executemany(f"DELETE FROM main.PlaylistSongs WHERE _rowid_ = ?;", [id_ for id_ in ids])
 
 
@@ -92,7 +90,7 @@ class mm_database_editor(object):
             [(playlist_id, id_, i+1) for i, id_ in enumerate(ids)])
 
 
-    def __get_songs_from_playlist(self, rym_playlist):
+    def __get_songs_from_rym_playlist(self, rym_playlist):
         playlist_songs = {}
         stats = {'found': 0, 'notfound': 0}
         for entry_no, entry in rym_playlist.items():
@@ -110,7 +108,7 @@ class mm_database_editor(object):
 
 
     def process_rym_list(self, rym_playlist, playlist_name):
-        songs = self.__get_songs_from_playlist(rym_playlist)
+        songs = self.__get_songs_from_rym_playlist(rym_playlist)
         playlist_name = f"rym-{playlist_name}"
         playlist_id = self.__get_playlist_id_from_name(playlist_name)
 

@@ -1,4 +1,8 @@
 import sqlite3
+import file_handler
+
+def cmp(a, b):
+    return (a > b) - (a < b) 
 
 
 class mm_database_editor(object):
@@ -7,6 +11,7 @@ class mm_database_editor(object):
         self.MM_PATH = "/home/melvelet/PlayOnLinux's virtual drives/MediaMonkey/drive_c/users/melvelet/Application Data/MediaMonkey/MM.DB"
         self.conn = self.__connect_to_db()
         self.c = self.conn.cursor()
+        # self.c.execute("SELECT load_extension('SQLite3MM.dll');")
         self.id_field = config["id_field"]
         self.parent_list_name = config["parent_list_name"]
         self.parent_list_id = self.__get_parent_playlist()
@@ -18,6 +23,7 @@ class mm_database_editor(object):
             conn = sqlite3.connect(self.MM_PATH)
         except Error as e:
             print(e)
+        conn.create_collation('IUNICODE', self.__iUnicodeCollate)
         return conn
 
 
@@ -26,14 +32,35 @@ class mm_database_editor(object):
         self.conn.close()
 
 
+    def __iUnicodeCollate(self, s1, s2):
+        length = max(len(s1), len(s2))
+        return cmp(s1.lower().zfill(length), s2.lower().zfill(length))
+
+
     def __get_songs_from_album_string(self, artist, album):
-        self.c.execute("SELECT ID, Artist, SongTitle FROM main.Songs WHERE Artist LIKE ? AND Album LIKE ? ORDER BY DiscNumber COLLATE NOCASE, TrackNumber COLLATE NOCASE;",
-            [artist, album])
+        songs = self.__get_songs_from_album_string_exact_match(artist, album)
+
+        # if not songs:
+        #     songs = self.__get_songs_from_album_string_as_substring(artist, album)
+
+        return songs
+
+
+    def __get_songs_from_album_string_exact_match(self, artist, album):
+        self.c.execute("SELECT ID, Artist, SongTitle FROM main.Songs WHERE Artist LIKE ? AND Album LIKE ? \
+            ORDER BY DiscNumber, TrackNumber;", [artist, album])
+        return self.c.fetchall()
+
+
+    def __get_songs_from_album_string_as_substring(self, artist, album):
+        self.c.execute("SELECT ID, Artist, SongTitle FROM main.Songs WHERE CHARINDEX(?, Artist) > 0 AND CHARINDEX(?, Album) > 0 \
+            ORDER BY DiscNumber, TrackNumber;", [artist, album])
         return self.c.fetchall()
 
 
     def __get_songs_from_rym_id(self, rym_id):
-        self.c.execute(f"SELECT ID, Artist, SongTitle FROM main.Songs WHERE {self.id_field} COLLATE NOCASE LIKE ? ORDER BY DiscNumber COLLATE NOCASE, TrackNumber COLLATE NOCASE;", [rym_id])
+        self.c.execute(f"SELECT ID, Artist, SongTitle FROM main.Songs WHERE {self.id_field} COLLATE NOCASE LIKE ? \
+            ORDER BY DiscNumber, TrackNumber;", [rym_id])
         return self.c.fetchall()
 
 

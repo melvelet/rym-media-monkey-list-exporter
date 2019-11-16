@@ -29,7 +29,8 @@ class rym_list_parser(object):
 
 
     def __parse_page(self, page):
-        table = page.find(class_='mbgen')
+        # table = page.find(class_='ooookiig').parent.parent.parent # top list
+        table = page.find(class_='mbgen') #custom charts
         parsed_page = {}
         entries = [entry_source for i, entry_source in enumerate(list(table.children)) if i % 3 == 1]
 

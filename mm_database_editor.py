@@ -2,12 +2,14 @@ import sqlite3
 
 
 class mm_database_editor(object):
-    def __init__(self, id_field="OrigYear"):
+    def __init__(self, config):
         # self.MM_PATH = "/media/melvelet/Volume1/MM/MM.DB"
         self.MM_PATH = "/home/melvelet/PlayOnLinux's virtual drives/MediaMonkey/drive_c/users/melvelet/Application Data/MediaMonkey/MM.DB"
         self.conn = self.__connect_to_db()
         self.c = self.conn.cursor()
-        self.id_field = id_field
+        self.id_field = config["id_field"]
+        self.parent_list_name = config["parent_list_name"]
+        self.parent_list_id = self.__get_parent_playlist()
 
 
     def __connect_to_db(self):
@@ -25,13 +27,13 @@ class mm_database_editor(object):
 
 
     def __get_songs_from_album_string(self, artist, album):
-        self.c.execute("SELECT ID, SongTitle FROM main.Songs WHERE Artist LIKE ? AND Album LIKE ?;",
+        self.c.execute("SELECT ID, Artist, SongTitle FROM main.Songs WHERE Artist LIKE ? AND Album LIKE ? ORDER BY DiscNumber COLLATE NOCASE, TrackNumber COLLATE NOCASE;",
             [artist, album])
         return self.c.fetchall()
 
 
     def __get_songs_from_rym_id(self, rym_id):
-        self.c.execute(f"SELECT ID, SongTitle FROM main.Songs WHERE {self.id_field} LIKE ?;", [rym_id])
+        self.c.execute(f"SELECT ID, Artist, SongTitle FROM main.Songs WHERE {self.id_field} COLLATE NOCASE LIKE ? ORDER BY DiscNumber COLLATE NOCASE, TrackNumber COLLATE NOCASE;", [rym_id])
         return self.c.fetchall()
 
 
@@ -59,21 +61,26 @@ class mm_database_editor(object):
         return found_via, songs
 
 
+    def __get_parent_playlist(self):
+        self.parent_list_id = 0
+        return self.__get_playlist_id_from_name(self.parent_list_name)
+
+
     def __get_playlist_id_from_name(self, playlist_name):
         self.c.execute("SELECT IDPlaylist FROM main.Playlists WHERE PlaylistName LIKE ?;",
             [playlist_name])
         playlist_id = self.c.fetchall()
 
         if not playlist_id:
-            self.__create_new_playlist(playlist_name)
+            self.__create_new_playlist(playlist_name, self.parent_list_id)
             return self.__get_playlist_id_from_name(playlist_name)
 
         return playlist_id[0][0]
 
 
-    def __create_new_playlist(self, playlist_name):
-        self.c.execute(f"INSERT INTO main.Playlists (PlaylistName,ParentPlaylist) VALUES (?,0);",
-            [playlist_name])
+    def __create_new_playlist(self, playlist_name, parent_playlist_id):
+        self.c.execute(f"INSERT INTO main.Playlists (PlaylistName,ParentPlaylist) VALUES (?,?);",
+            [playlist_name, parent_playlist_id])
 
 
     def __clean_playlist(self, playlist_id):
@@ -85,18 +92,18 @@ class mm_database_editor(object):
 
     def __insert_songs_into_mm_playlist(self, playlist_id, songs):
         self.__clean_playlist(playlist_id)
-        ids = [id_ for id_ in songs]
+        ids = [id_[0] for id_ in songs]
         self.c.executemany("INSERT INTO main.PlaylistSongs(IDPlaylist,IDSong,SongOrder) VALUES (?,?,?);",
             [(playlist_id, id_, i+1) for i, id_ in enumerate(ids)])
 
 
     def __get_songs_from_rym_playlist(self, rym_playlist):
-        playlist_songs = {}
+        playlist_songs = []
         stats = {'found': 0, 'notfound': 0}
         for entry_no, entry in rym_playlist.items():
             found_via, album_songs = self.__process_album(entry['artist'], entry['release_title'], entry['rym_id'])
             if album_songs:
-                playlist_songs.update(album_songs)
+                playlist_songs += album_songs
                 print(f"Found: {entry_no}. {entry['artist']} - {entry['release_title']} (found via {found_via})")
                 stats['found'] += 1
             else:

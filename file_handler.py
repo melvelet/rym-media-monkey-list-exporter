@@ -17,6 +17,13 @@ def save_to_yaml(content, file_name):
         yaml.safe_dump(content, outfile, default_flow_style=False)
         print(f"Results written to rym-{file_name}.yml")
 
+def open_yaml(file_name):
+    with open(f"rym-{file_name}.yml") as stream:
+        try:
+            return yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
+
 
 def ordered_dump(data, file_name):
     class OrderedDumper(yaml.SafeDumper):

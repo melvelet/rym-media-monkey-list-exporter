@@ -1,11 +1,12 @@
 import os, glob, re
 from os import path
+from pathlib import Path
 from bs4 import BeautifulSoup
 import file_handler
 
 
-abspath = os.path.dirname(os.path.realpath(__file__))
-source_path = 'lists/'
+abspath = Path(os.path.dirname(os.path.realpath(__file__)))
+source_path = 'lists'
 
 
 class rym_list_parser(object):
@@ -16,7 +17,7 @@ class rym_list_parser(object):
     def parse_list(self, list_name, max_entries=0):
         self.config = self.__get_config(max_entries)
 
-        list_path = path.join(source_path, list_name)
+        list_path = abspath / source_path / list_name
         os.chdir(list_path)
 
         parsed_list = {}
@@ -24,6 +25,8 @@ class rym_list_parser(object):
             page = file_handler.open_html(file)
             parsed_page = self.__parse_page(page)
             parsed_list.update(parsed_page)
+            
+        os.chdir(abspath)
 
         return self.__add_leading_zeroes(parsed_list)
 

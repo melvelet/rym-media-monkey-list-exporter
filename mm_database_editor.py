@@ -1,5 +1,7 @@
 import sqlite3
-import file_handler
+import file_handler, com_handler
+from pathlib import Path
+import win32com.client
 
 def cmp(a, b):
     return (a > b) - (a < b) 
@@ -8,20 +10,22 @@ def cmp(a, b):
 class mm_database_editor(object):
     def __init__(self, config):
         # self.MM_PATH = "/media/melvelet/Volume1/MM/MM.DB"
-        self.MM_PATH = "/home/melvelet/PlayOnLinux's virtual drives/MediaMonkey/drive_c/users/melvelet/Application Data/MediaMonkey/MM.DB"
+#        self.MM_PATH = "/home/melvelet/PlayOnLinux's virtual drives/MediaMonkey/drive_c/users/melvelet/Application Data/MediaMonkey/MM.DB"
+        self.MM_PATH = Path("C:/Users/Melwin/AppData/Roaming/MediaMonkey/MM.DB")
         self.conn = self.__connect_to_db()
         self.c = self.conn.cursor()
         # self.c.execute("SELECT load_extension('SQLite3MM.dll');")
         self.id_field = config["id_field"]
         self.parent_list_name = config["parent_list_name"]
         self.parent_list_id = self.__get_parent_playlist()
+        self.com_handler = com_handler.ComHandler(self.id_field)
 
 
     def __connect_to_db(self):
         conn = None
         try:
             conn = sqlite3.connect(self.MM_PATH)
-        except Error as e:
+        except sqlite3.Error as e:
             print(e)
         conn.create_collation('IUNICODE', self.__iUnicodeCollate)
         return conn
@@ -68,6 +72,7 @@ class mm_database_editor(object):
         ids = self.__get_mm_ids(songs)
         self.c.executemany(f"UPDATE main.Songs SET {self.id_field} = ? WHERE _rowid_ = ?",
             [(rym_id, id_[0]) for id_ in ids])
+#        self.com_handler.write_rym_to_db(ids, rym_id)
 
 
     def __get_mm_ids(self, songs):
@@ -84,6 +89,8 @@ class mm_database_editor(object):
             if songs:
                 self.__write_rym_to_db(songs, rym_id)
                 found_via = 'name'
+                
+        self.com_handler.write_rym_to_db(self.__get_mm_ids(songs), rym_id)
 
         return found_via, songs
 
@@ -155,6 +162,7 @@ class mm_database_editor(object):
 
 if __name__ == "__main__":
     mmde = mm_database_editor()
+    print(mmde.SDB)
     # artist = "Depeche Mode"
     # album = "Violator"
     # rym_id = "Album12346"

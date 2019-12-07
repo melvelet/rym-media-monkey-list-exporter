@@ -15,10 +15,11 @@ if __name__ == "__main__":
     ComHandler = com_handler.ComHandler(config)
     
 
-    parsed_list = rym_list_parser.parse_list(playlist_name, 100)
+    parsed_list = rym_list_parser.parse_list(playlist_name, 10)
     file_handler.save_to_yaml(parsed_list, playlist_name)
     # parsed_list = file_handler.open_yaml(playlist_name)
     db_written = ComHandler.process_rym_list(parsed_list, playlist_name)
 #    db_written = mm_database_editor.process_rym_list(parsed_list, playlist_name)
 #    mm_database_editor.commit_and_close()
-#    print(db_written)
+    print(db_written)
+    ComHandler.close_com()

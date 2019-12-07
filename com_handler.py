@@ -3,18 +3,14 @@ import win32com.client
 class ComHandler(object):
     def __init__(self, config):
         self.SDB = win32com.client.Dispatch("SongsDB.SDBApplication")
-#        pl = self.SDB.PlaylistByTitle("rym-2019")
         self.db = self.SDB.Database
         self.config = config
-        # dbit = db.OpenSQL("SELECT * FROM Songs WHERE id > 0")
-#        songs = self.db.QuerySongs("Songs.Album = 'Violator'")
-#        print(songs)
-#        song = songs.Item
-#        print(song.AlbumName)
-        
-        #    player.clear()
-        #    print(player.title)
         print("COM initialization successful")
+        
+    
+    def close_com(self):
+        self.SDB = None
+        self.db = None
         
         
     def print_songs_iterator(self, songs):
@@ -26,23 +22,44 @@ class ComHandler(object):
             
     def print_song_list(self, song_list):
         print("print songs of song list")
-        for i in range(song_list.Count - 1):
-            song = song_list.Item(i).Lyricist
+        for i in range(song_list.Count):
+            song = song_list.Item(i)
             print(f"ID: {song.ID}, Artist: {song.Artist.Name}, Album: {song.Album.Name}, Track: {song.TrackOrder}, Title: {song.Title}")
-            songs.next()
             
         
     def process_rym_list(self, parsed_list, playlist_name):
-        playlist_name = f"rym-{playlist_name}"
-        playlist = self.__get_playlist_from_name(playlist_name)
+        songs = self.__get_songs_from_rym_playlist(parsed_list)
         
-        if not playlist:
+        playlist_name = f"rym-{playlist_name}"
+        playlist = self.__get_playlist_by_name(playlist_name)
+        
+        if not songs or not playlist:
             return False
         
-        for i, release in parsed_list.items():
-            self.__process_release(release)
-            
+        self.__write_songs_to_playlist(songs, playlist)
+        
         return True
+    
+    
+    def __get_songs_from_rym_playlist(self, parsed_list):
+        songs = self.SDB.NewSongList
+        
+        for i, release in parsed_list.items():
+            songs_release, found_by = self.__get_songs_from_release(release)
+            if found_by:
+                print(f"Found {i}. {release['artist']} - {release['release_title']} (found by {found_by})")
+#                self.print_song_list(songs_release)
+                self.__merge_song_lists(songs, songs_release)
+            else: 
+                print(f"Not found {i}. {release['artist']} - {release['release_title']}")
+                
+        songs.UpdateAll()
+        return songs
+    
+    
+    def __write_songs_to_playlist(self, songs, playlist):
+        playlist.Clear()
+        playlist.AddTracks(songs)
             
     
     def __get_playlist_by_name(self, name):
@@ -50,15 +67,17 @@ class ComHandler(object):
     
     
     def __get_parent_playlist(self):
-        return self.SDB.PlaylistByTitle(self.config.parent_list_name)
+        return self.SDB.PlaylistByTitle(self.config['parent_list_name'])
+    
+    
+    def  __merge_song_lists(self, song_list, song_list_release):
+        for i in range(song_list_release.Count):
+            song_list.Add(song_list_release.Item(i))
 
         
-    def __write_rym_to_db(self, songs, rym_id):
-        song_list = self.__convert_to_song_list(songs)
-        for i in range(song_list.Count - 1):
+    def __write_rym_to_db(self, song_list, rym_id):
+        for i in range(song_list.Count):
             song_list.Item(i).Lyricist = rym_id
-        song_list.UpdateAll()
-        return self.__get_songs_by_rym_id(rym_id)
     
     
     def __convert_to_song_list(self, songs):
@@ -67,33 +86,32 @@ class ComHandler(object):
             song_list.Add(songs.Item)
             songs.next()
         songs = None
-        self.print_song_list(song_list)
         return song_list
         
         
-    def get_songs_from_release(self, release):
+    def __get_songs_from_release(self, release):
         rym_id = release['rym_id']
+        found_by = ''
         songs = self.__get_songs_by_rym_id(rym_id)
-        self.print_songs_iterator(songs)
         
-        if not songs:
+        if songs.Count > 1:
+            found_by = 'id'
+        else:
             songs = self.__get_songs_by_string(release['artist'], release['release_title'])
-            self.__write_rym_to_mm(songs, rym_id)
-            
-        if not songs:
-            return False
+            self.__write_rym_to_db(songs, rym_id)
+            found_by = 'name'
         
-        return self.__convert_to_song_list(songs)
+        return songs, found_by
         
         
     def __get_songs_by_rym_id(self, rym_id):
         songs = self.db.QuerySongs(f"Songs.{self.config['id_field']} LIKE '{rym_id}'")
-        return self.__order_songs(songs)
+        return self.__convert_to_song_list(self.__order_songs(songs))
         
         
     def __get_songs_by_string(self, artist, release_title):
-        songs = self.db.QuerySongs(f"Songs.Artist LIKE '{artist}' AND Songs.Album LIKE '{release_title}'")
-        return self.__order_songs(songs)
+        songs = self.db.QuerySongs(f"Songs.Artist LIKE '{self.__escape_string(artist)}' AND Songs.Album LIKE '{self.__escape_string(release_title)}'")
+        return self.__convert_to_song_list(self.__order_songs(songs))
         
         
     def __get_songs_by_mm_id(self, ids):
@@ -110,11 +128,16 @@ class ComHandler(object):
         
         song_list.sort()
         ordered_ids = [v[2] for _, v in enumerate(song_list)]
-        return self.__get_songs_by_mm_id(ordered_ids)           
+        return self.__get_songs_by_mm_id(ordered_ids)  
+
+
+    def __escape_string(self, my_string):
+        return my_string.replace("'","''")
         
         
     def __build_array_string(self, ids):
         return f"({','.join([str(x) for x in ids])})"
+
     
 if __name__ == "__main__":
     config = {
@@ -134,9 +157,12 @@ if __name__ == "__main__":
     album = "Violator"
     rym_id = "[Album996]"
     
-    songs = ComHandler.get_songs_from_release(release)
-    ComHandler.print_song_list(songs)
-    songs = None
+#    songs, found_by = ComHandler.get_songs_from_release(release)
+#    ComHandler.print_song_list(songs)
+#    songs = None
+#    print(f"found by {found_by}")
+    
+    print(ComHandler.escape_string("Let's Dance"))
     
 #    songs = ComHandler.get_songs_by_string(artist, album)
 #    ComHandler.print_songs(songs)

@@ -10,13 +10,11 @@ source_path = 'lists'
 
 
 class rym_list_parser(object):
-    def __init__(self):
-        self.config = {}
+    def __init__(self, config):
+        self.config = config
 
 
-    def parse_list(self, list_name, max_entries=0):
-        self.config = self.__get_config(max_entries)
-
+    def parse_list(self, list_name):
         list_path = abspath / source_path / list_name
         os.chdir(list_path)
 
@@ -56,7 +54,9 @@ class rym_list_parser(object):
         return {
             entry_no : {
                 'artist' : self.__get_artist(entry_source),
+                'release_link' : self.__get_release_link(entry_source),
                 'release_title' : self.__get_release_title(entry_source),
+                'release_type' : self.__get_release_type(entry_source),
                 'rym_id' : self.__get_rym_id(entry_source)
             }
         }
@@ -64,6 +64,14 @@ class rym_list_parser(object):
 
     def __get_release_title(self, entry_source):
         return self.__format_attribute(entry_source.find(class_='album').string)
+    
+    
+    def __get_release_link(self, entry_source):
+        return f"https://rateyourmusic.com{self.__format_attribute(entry_source.find(class_='album')['href'])}"
+    
+    
+    def __get_release_type(self, entry_source):
+        return self.__get_release_link(entry_source).split('/')[4]
 
 
     def __get_artist(self, entry_source):
@@ -107,7 +115,10 @@ class rym_list_parser(object):
 
 
 if __name__ == "__main__":
+    config = {
+        'max_entries': 15
+    }
     list_name = '2019'
-    rym_list_parser = rym_list_parser()
-    parsed_list = rym_list_parser.parse_list(list_name, 150)
+    rym_list_parser = rym_list_parser(config)
+    parsed_list = rym_list_parser.parse_list(list_name)
     file_handler.save_to_yaml(parsed_list, list_name)

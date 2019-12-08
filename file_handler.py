@@ -10,12 +10,13 @@ def open_html(file_path):
         except (IOError) as exc:
             print(exc)
     return soup
-    
+
 
 def save_to_yaml(content, file_name):
     with open(f"rym-{file_name}.yml", 'w') as outfile:
         yaml.safe_dump(content, outfile, default_flow_style=False)
         print(f"Results written to rym-{file_name}.yml")
+
 
 def open_yaml(file_name):
     with open(f"rym-{file_name}.yml") as stream:

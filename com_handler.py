@@ -75,9 +75,11 @@ class ComHandler(object):
             song_list.Add(song_list_release.Item(i))
 
         
-    def __write_rym_to_db(self, song_list, rym_id):
+    def __write_rym_to_db(self, song_list, release):
         for i in range(song_list.Count):
-            song_list.Item(i).Lyricist = rym_id
+            if song_list.Item(i).Comment: 
+                song_list.Item(i).Comment += '\n'
+            song_list.Item(i).Comment += f"{release['rym_id']}: {release['release_link']}"
     
     
     def __convert_to_song_list(self, songs):
@@ -97,21 +99,36 @@ class ComHandler(object):
         if songs.Count > 1:
             found_by = 'id'
         else:
-            songs = self.__get_songs_by_string(release['artist'], release['release_title'])
-            self.__write_rym_to_db(songs, rym_id)
-            found_by = 'name'
+            songs, found_by = self.__find_and_get_all_songs_from_release_and_write_rym_id(release)
+        
+        return songs, found_by
+    
+    
+    def __find_and_get_all_songs_from_release_and_write_rym_id(self, release):
+        songs, partial_match = self.__get_all_songs_by_string(release['artist'], release['release_title'])
+        self.__write_rym_to_db(songs, release)
+        if partial_match:
+            partial_match = f"{songs[0].Artist.Name} - {songs[0].Album.Name}"
+        found_by = F"name{' ' + partial_match if partial_match else ''}"
         
         return songs, found_by
         
         
     def __get_songs_by_rym_id(self, rym_id):
-        songs = self.db.QuerySongs(f"Songs.{self.config['id_field']} LIKE '{rym_id}'")
+        songs = self.db.QuerySongs(f"Songs.Comment LIKE '%{rym_id}%'")
         return self.__convert_to_song_list(self.__order_songs(songs))
         
-        
-    def __get_songs_by_string(self, artist, release_title):
+    
+    def __get_all_songs_by_string(self, artist, release_title):
         songs = self.db.QuerySongs(f"Songs.Artist LIKE '{self.__escape_string(artist)}' AND Songs.Album LIKE '{self.__escape_string(release_title)}'")
-        return self.__convert_to_song_list(self.__order_songs(songs))
+        
+        if songs.EOF and self.config['partial_match']:
+            songs = self.db.QuerySongs(f"Songs.Artist LIKE '%{self.__escape_string(artist)}%' AND Songs.Album LIKE '%{self.__escape_string(release_title)}%'")
+            partial_match = True
+        else:
+            partial_match = None
+       
+        return self.__convert_to_song_list(self.__order_songs(songs)), partial_match
         
         
     def __get_songs_by_mm_id(self, ids):
@@ -141,14 +158,14 @@ class ComHandler(object):
     
 if __name__ == "__main__":
     config = {
-        "id_field": "Lyricist",
-        "parent_list_name": "RYMtoMM"
+        "parent_list_name": "RYMtoMM",
+        "partial_match": True,
     }
     
     release = {
-        'artist': 'Weyes Blood',
-        'release_title': 'Titanic Rising',
-        'rym_id': '[Album9999224]'
+        'artist': 'Depeche Mode',
+        'release_title': 'Previously Unreleased Rehearsal Recordings',
+        'rym_id': '[Album0]'
     }
 
     playlist_name = "2019"
@@ -157,12 +174,12 @@ if __name__ == "__main__":
     album = "Violator"
     rym_id = "[Album996]"
     
-#    songs, found_by = ComHandler.get_songs_from_release(release)
+    songs, found_by = ComHandler.get_songs_from_release(release)
 #    ComHandler.print_song_list(songs)
-#    songs = None
-#    print(f"found by {found_by}")
+    songs = None
+    print(f"found by {found_by}")
     
-    print(ComHandler.escape_string("Let's Dance"))
+#    print(ComHandler.escape_string("Let's Dance"))
     
 #    songs = ComHandler.get_songs_by_string(artist, album)
 #    ComHandler.print_songs(songs)

@@ -3,13 +3,14 @@
 TODO:
 
     MM DB Editor:
-        - Process singles
+        - process singles
         - split playlist into smaller playlists of size x
-        - Process Multi-Artist releases
-        - Process V.A. releases
+        - process Multi-Artist releases
+        - process V.A. releases
 
     RYM List Parser:
-        - official/non-Custom charts
+        - get alternative artist name from link
+        - official/non-custom charts
         - user lists with ranking
         - user lists without ranking
-        - Asian names (with "subtext" class)
+        - asian names (with "subtext" class)

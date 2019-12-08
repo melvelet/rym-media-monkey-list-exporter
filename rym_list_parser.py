@@ -1,12 +1,6 @@
-import os, glob, re
-from os import path
-from pathlib import Path
+import os, glob
 from bs4 import BeautifulSoup
 import file_handler
-
-
-abspath = Path(os.path.dirname(os.path.realpath(__file__)))
-source_path = 'lists'
 
 
 class rym_list_parser(object):
@@ -15,16 +9,11 @@ class rym_list_parser(object):
 
 
     def parse_list(self, list_name):
-        list_path = abspath / source_path / list_name
-        os.chdir(list_path)
-
         parsed_list = {}
         for file in glob.glob("*.html"):
             page = file_handler.open_html(file)
             parsed_page = self.__parse_page(page)
             parsed_list.update(parsed_page)
-            
-        os.chdir(abspath)
 
         return self.__add_leading_zeroes(parsed_list)
 
@@ -54,6 +43,7 @@ class rym_list_parser(object):
         return {
             entry_no : {
                 'artist' : self.__get_artist(entry_source),
+                'artist_from_link' : self.__get_artist_from_link(entry_source),
                 'release_link' : self.__get_release_link(entry_source),
                 'release_title' : self.__get_release_title(entry_source),
                 'release_type' : self.__get_release_type(entry_source),
@@ -79,6 +69,15 @@ class rym_list_parser(object):
             return self.__get_collab_artists(entry_source.find_all(class_='artist'))
         else:
             return self.__format_attribute(entry_source.find(class_='artist').string)
+        
+        
+    def __get_artist_from_link(self, entry_source):
+        if len(entry_source.find_all(class_='artist')) > 1:
+            return ''
+        else:
+            artist = entry_source.find(class_='artist')['href'].split('/')[2]
+            artist = artist.replace('-', ' ').replace('_', ' ')
+            return self.__format_attribute(artist)
 
 
     def __get_collab_artists(self, collab_artists):

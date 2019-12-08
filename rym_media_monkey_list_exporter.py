@@ -1,15 +1,25 @@
 import rym_list_parser, mm_database_editor, file_handler, com_handler
+import os
+from pathlib import Path
+
+
+abspath = Path(os.path.dirname(os.path.realpath(__file__)))
+source_path = 'lists'
 
 
 if __name__ == "__main__":
     config = {
         "parent_list_name": "RYMtoMM",
         "partial_match" : True,
-        'max_entries': 20
+        'max_entries': 0
     }
 
-    playlist_name = "2019"
+#    playlist_name = "2019"
 #    playlist_name = 'Top Albums'
+    playlist_name = "Singles 1984"
+    
+    list_path = abspath / source_path / playlist_name
+    os.chdir(list_path)
 
     rym_list_parser = rym_list_parser.rym_list_parser(config)
 #    mm_database_editor = mm_database_editor.mm_database_editor(config)

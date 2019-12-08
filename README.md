@@ -3,14 +3,12 @@
 TODO:
 
     MM DB Editor:
-        - Make non-int fields usable for rym tag storage
+        - Process singles
         - split playlist into smaller playlists of size x
-        - experiment with matching (WHERE CHARINDEX('word1', Column1) > 0)
         - Process Multi-Artist releases
         - Process V.A. releases
 
     RYM List Parser:
-        - Singles
         - official/non-Custom charts
         - user lists with ranking
         - user lists without ranking

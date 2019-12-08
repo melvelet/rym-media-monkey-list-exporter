@@ -46,7 +46,7 @@ class ComHandler(object):
         
         for i, release in parsed_list.items():
             songs_release, found_by = self.__get_songs_from_release(release)
-            if found_by:
+            if songs_release.Count > 0:
                 print(f"Found {i}. {release['artist']} - {release['release_title']} (found by {found_by})")
 #                self.print_song_list(songs_release)
                 self.__merge_song_lists(songs, songs_release)
@@ -96,7 +96,7 @@ class ComHandler(object):
         found_by = ''
         songs = self.__get_songs_by_rym_id(rym_id)
         
-        if songs.Count > 1:
+        if songs.Count > 0:
             found_by = 'id'
         else:
             songs, found_by = self.__find_and_get_songs_from_release_and_write_rym_id(release)

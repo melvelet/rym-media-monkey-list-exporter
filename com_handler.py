@@ -190,11 +190,9 @@ class ComHandler(object):
         for i in range(songs.Count):
             song_list.append((songs.Item(i).DiscNumber, songs.Item(i).TrackOrder, i))
         
-        print(song_list)
         song_list.sort()
         ordered_ids = [v[2] for _, v in enumerate(song_list)]
-        print(song_list)
-        print(ordered_ids)
+        
         for i in range(len(ordered_ids)):
             songs.Add(songs.Item(ordered_ids[i]))
             

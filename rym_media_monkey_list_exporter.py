@@ -10,7 +10,7 @@ source_path = 'lists'
 if __name__ == "__main__":
     config = {
         "parent_list_name": "RYMtoMM",
-        "partial_match" : True,
+        "exact_matches_only" : False,
         'max_entries': 0
     }
 

@@ -1,4 +1,5 @@
 import win32com.client
+import re
 
 class ComHandler(object):
     def __init__(self, config):
@@ -43,16 +44,18 @@ class ComHandler(object):
     
     def __get_songs_from_rym_playlist(self, parsed_list):
         songs = self.SDB.NewSongList
+        found = 0
         
         for i, release in parsed_list.items():
             songs_release, found_by = self.__get_songs_from_release(release)
             if songs_release.Count > 0:
                 print(f"Found {i}. {release['artist']} - {release['release_title']} (found by {found_by})")
-#                self.print_song_list(songs_release)
+                found += 1
                 self.__merge_song_lists(songs, songs_release)
-            else: 
-                print(f"Not found {i}. {release['artist']} - {release['release_title']}")
+            else:
+                print(f"Not found {i}. {release['artist']} - {release['release_title']}\n\t{release['rym_id']}: {release['release_link']}")
                 
+        print(f"Found: {found} of {i}. Writing to database.")
         songs.UpdateAll()
         return songs
     
@@ -96,7 +99,7 @@ class ComHandler(object):
         found_by = ''
         songs = self.__get_songs_by_rym_id(rym_id)
         
-        if songs.Count > 0:
+        if songs.Count:
             found_by = 'id'
         else:
             songs, found_by = self.__find_and_get_songs_from_release_and_write_rym_id(release)
@@ -106,15 +109,14 @@ class ComHandler(object):
     
     def __find_and_get_songs_from_release_and_write_rym_id(self, release):
         if release['release_type'] == 'single':
-            songs, partial_match = self.__get_single_song_by_string(release)
-            if songs.Count and partial_match:
-                partial_match = f"{songs[0].Artist.Name} - {songs[0].Title}"
-        else:
             songs, partial_match = self.__get_all_songs_by_string(release)
             if songs.Count and partial_match:
-                partial_match = f"{songs[0].Artist.Name} - {songs[0].Album.Name}"
+                if release['release_type'] == 'single':
+                    partial_match = f"{songs[0].Artist.Name} - {songs[0].Title}"
+                else:
+                    partial_match = f"{songs[0].Artist.Name} - {songs[0].Album.Name}"
                 
-        if songs:
+        if songs.Count:
             self.__write_rym_to_db(songs, release)
         found_by = F"name{' ' + partial_match if isinstance(partial_match, str) else ''}"
         
@@ -124,41 +126,49 @@ class ComHandler(object):
     def __get_songs_by_rym_id(self, rym_id):
         songs = self.db.QuerySongs(f"Songs.Comment LIKE '%{rym_id}%'")
         return self.__convert_to_song_list(self.__order_songs(songs))
-    
-    
-    def __get_single_song_by_string(self, release):
-        artist = release['artist']
-        release_title = release['release_title']
-        artist_from_link = release['artist_from_link']
-        song_title = release_title.split(" / ")[0]
-        partial_match = None
-        songs = self.db.QuerySongs(f"Songs.Artist LIKE '{self.__escape_string(artist)}' AND Songs.SongTitle LIKE '{self.__escape_string(song_title)}'")
-
-        if songs.EOF and self.config['partial_match']:
-            partial_match = True
-            if artist.lower() != artist_from_link:
-                songs = self.db.QuerySongs(f"Songs.Artist LIKE '%{self.__escape_string(artist_from_link)}%' AND Songs.SongTitle LIKE '%{self.__escape_string(song_title)}%'")
-            if songs.EOF:
-                songs = self.db.QuerySongs(f"Songs.Artist LIKE '%{self.__escape_string(artist)}%' AND Songs.SongTitle LIKE '%{self.__escape_string(song_title)}%'")
-       
-        return self.__convert_to_song_list(self.__order_songs(songs)), partial_match
         
     
     def __get_all_songs_by_string(self, release):
         artist = release['artist']
-        release_title = release['release_title']
         artist_from_link = release['artist_from_link']
         partial_match = None
-        songs = self.db.QuerySongs(f"Songs.Artist LIKE '{self.__escape_string(artist)}' AND Songs.Album LIKE '{self.__escape_string(release_title)}'")
+        
+        search_parameter, search_variable = self.__get_search_parameter_and_variable(release)
+        
+        songs = self.db.QuerySongs(f"Songs.Artist LIKE '{self.__escape_string(artist)}' AND Songs.{search_parameter} LIKE '{self.__escape_string(search_variable)}'")
 
-        if songs.EOF and self.config['partial_match']:
+        if songs.EOF and not self.config['exact_matches_only']:
             partial_match = True
-            if artist.lower() != artist_from_link:
-                songs = self.db.QuerySongs(f"Songs.Artist LIKE '%{self.__escape_string(artist_from_link)}%' AND Songs.Album LIKE '%{self.__escape_string(release_title)}%'")
-            if songs.EOF:
-                songs = self.db.QuerySongs(f"Songs.Artist LIKE '%{self.__escape_string(artist)}%' AND Songs.Album LIKE '%{self.__escape_string(release_title)}%'")
+            for i in range(3):
+                if i == 0:
+                    songs = self.db.QuerySongs(f"Songs.Artist LIKE '%{self.__escape_string(artist)}%' AND Songs.{search_parameter} LIKE '%{self.__escape_string(search_variable)}%'")
+                if i == 1:
+                    if artist.lower() != artist_from_link:
+                        songs = self.db.QuerySongs(f"Songs.Artist LIKE '%{self.__escape_string(artist_from_link)}%' AND Songs.{search_parameter} LIKE '%{self.__escape_string(search_variable)}%'")
+                if i == 2:
+                    artists = self.__split_string_by_delimiters(artist, delimiters = (" / ", ";", " and ", " & ", "The "))
+                    artists = list(filter(None, artists))
+                    if len(artists) > 1:
+                        for j in range(len(artists)):
+                            print(f"search for '{artists[j]}' - '{search_variable}'")
+                            songs = self.db.QuerySongs(f"Songs.Artist LIKE '%{self.__escape_string(artists[j])}%' AND Songs.{search_parameter} LIKE '%{self.__escape_string(search_variable)}%'")
+                            if not songs.EOF:
+                                break
+                if not songs.EOF:
+                    break
        
         return self.__convert_to_song_list(self.__order_songs(songs)), partial_match
+    
+    
+    def __get_search_parameter_and_variable(self, release):
+        release_title = release['release_title']
+        if release['release_type'] == 'single': 
+            search_variable = release_title.split(" / ")[0]
+            search_parameter = "SongTitle"
+        else:
+            search_variable = release_title
+            search_parameter = "Album"
+        return search_parameter, search_variable
         
         
     def __get_songs_by_mm_id(self, ids):
@@ -184,6 +194,11 @@ class ComHandler(object):
         
     def __build_array_string(self, elements):
         return f"({','.join([self.__escape_string(str(x)) for x in elements])})"
+    
+    
+    def __split_string_by_delimiters(self, my_string, delimiters):
+        regexPattern = '|'.join(map(re.escape, delimiters))
+        return re.split(regexPattern, my_string)
 
     
 if __name__ == "__main__":

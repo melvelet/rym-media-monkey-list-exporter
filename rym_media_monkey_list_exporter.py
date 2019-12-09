@@ -11,12 +11,12 @@ if __name__ == "__main__":
     config = {
         "parent_list_name": "RYMtoMM",
         "exact_matches_only" : False,
-        'max_entries': 0
+        'max_entries': 10
     }
 
 #    playlist_name = "2019"
-#    playlist_name = 'Top Albums'
-    playlist_name = "Singles 1984"
+    playlist_name = 'Top Albums'
+#    playlist_name = "Singles 1984"
     
     list_path = abspath / source_path / playlist_name
     os.chdir(list_path)

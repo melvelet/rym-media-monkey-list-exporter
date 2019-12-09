@@ -55,7 +55,7 @@ class ComHandler(object):
             else:
                 print(f"Not found {i}. {release['artist']} - {release['release_title']}\n\t{release['rym_id']}: {release['release_link']}")
                 
-        print(f"Found: {found} of {i}. Writing to database.")
+        print(f"Found: {found} of {i}. Writing to database...")
         songs.UpdateAll()
         return songs
     
@@ -108,13 +108,12 @@ class ComHandler(object):
     
     
     def __find_and_get_songs_from_release_and_write_rym_id(self, release):
-        if release['release_type'] == 'single':
-            songs, partial_match = self.__get_all_songs_by_string(release)
-            if songs.Count and partial_match:
-                if release['release_type'] == 'single':
-                    partial_match = f"{songs[0].Artist.Name} - {songs[0].Title}"
-                else:
-                    partial_match = f"{songs[0].Artist.Name} - {songs[0].Album.Name}"
+        songs, partial_match = self.__get_all_songs_by_string(release)
+        if songs.Count and partial_match:
+            if release['release_type'] == 'single':
+                partial_match = f"{songs[0].Artist.Name} - {songs[0].Title}"
+            else:
+                partial_match = f"{songs[0].Artist.Name} - {songs[0].Album.Name}"
                 
         if songs.Count:
             self.__write_rym_to_db(songs, release)
@@ -125,7 +124,7 @@ class ComHandler(object):
         
     def __get_songs_by_rym_id(self, rym_id):
         songs = self.db.QuerySongs(f"Songs.Comment LIKE '%{rym_id}%'")
-        return self.__convert_to_song_list(self.__order_songs(songs))
+        return self.__order_songs(self.__convert_to_song_list(songs))
         
     
     def __get_all_songs_by_string(self, release):
@@ -146,18 +145,28 @@ class ComHandler(object):
                     if artist.lower() != artist_from_link:
                         songs = self.db.QuerySongs(f"Songs.Artist LIKE '%{self.__escape_string(artist_from_link)}%' AND Songs.{search_parameter} LIKE '%{self.__escape_string(search_variable)}%'")
                 if i == 2:
-                    artists = self.__split_string_by_delimiters(artist, delimiters = (" / ", ";", " and ", " & ", "The "))
-                    artists = list(filter(None, artists))
-                    if len(artists) > 1:
-                        for j in range(len(artists)):
-                            print(f"search for '{artists[j]}' - '{search_variable}'")
-                            songs = self.db.QuerySongs(f"Songs.Artist LIKE '%{self.__escape_string(artists[j])}%' AND Songs.{search_parameter} LIKE '%{self.__escape_string(search_variable)}%'")
-                            if not songs.EOF:
-                                break
+                        temp_songs= self.__get_songs_from_split_artist_string(release)
+                        if temp_songs:
+                            songs = temp_songs
+                            temp_songs = None
                 if not songs.EOF:
                     break
        
-        return self.__convert_to_song_list(self.__order_songs(songs)), partial_match
+        return self.__order_songs(self.__convert_to_song_list(songs)), partial_match
+    
+    
+    def __get_songs_from_split_artist_string(self, release):
+        songs = None
+        search_parameter, search_variable = self.__get_search_parameter_and_variable(release)
+        artists = self.__split_string_by_delimiters(release['artist'], delimiters = (" / ", ";", " and ", " & ", "The "))
+        artists = list(filter(None, artists))
+        if len(artists) > 1:
+            for j in range(len(artists)):
+#                print(f"search for '{artists[j]}' - '{search_variable}'")
+                songs = self.db.QuerySongs(f"Songs.Artist LIKE '%{self.__escape_string(artists[j])}%' AND Songs.{search_parameter} LIKE '%{self.__escape_string(search_variable)}%'")
+                if not songs.EOF:
+                    break
+        return songs
     
     
     def __get_search_parameter_and_variable(self, release):
@@ -178,14 +187,21 @@ class ComHandler(object):
     
     def __order_songs(self, songs):
         song_list = []
-        while not songs.EOF:
-            song_list.append((songs.Item.DiscNumber, songs.Item.TrackOrder, songs.Item.ID))
-            songs.next()
-        songs = None
+        for i in range(songs.Count):
+            song_list.append((songs.Item(i).DiscNumber, songs.Item(i).TrackOrder, i))
         
+        print(song_list)
         song_list.sort()
         ordered_ids = [v[2] for _, v in enumerate(song_list)]
-        return self.__get_songs_by_mm_id(ordered_ids)  
+        print(song_list)
+        print(ordered_ids)
+        for i in range(len(ordered_ids)):
+            songs.Add(songs.Item(ordered_ids[i]))
+            
+        for i in range(len(ordered_ids)):
+            songs.Delete(0)
+            
+        return songs  
 
 
     def __escape_string(self, my_string):

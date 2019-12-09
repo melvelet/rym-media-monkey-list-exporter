@@ -1,11 +1,13 @@
 import win32com.client
 import re
+from logger import Logger
 
 class ComHandler(object):
     def __init__(self, config):
         self.SDB = win32com.client.Dispatch("SongsDB.SDBApplication")
         self.db = self.SDB.Database
         self.config = config
+        self.logger = Logger()
         print("COM initialization successful")
         
     
@@ -53,7 +55,8 @@ class ComHandler(object):
             songs = self.__get_songs_from_rym_playlist(parsed_list, 1, total_releases)
             self.__write_songs_to_playlist(songs, playlist)
             
-        print(f"Found: {self.found} of {total_releases}")
+        self.logger.log(f"Found: {self.found} of {total_releases}")
+        self.logger.close()
         
         return True
     
@@ -65,13 +68,13 @@ class ComHandler(object):
         for i, release in list(parsed_list.items())[start - 1 : end]:
             songs_release, found_by = self.__get_songs_from_release(release)
             if songs_release.Count > 0:
-                print(f"Found {i}. {release['artist']} - {release['release_title']} (found by {found_by})")
+                self.logger.log(f"Found {i}. {release['artist']} - {release['release_title']} (found by {found_by})")
                 self.found += 1
                 if found_by.startswith('name'):
                     songs_release.UpdateAll()
                 self.__merge_song_lists(songs, songs_release)
             else:
-                print(f"Not found {i}. {release['artist']} - {release['release_title']}\n\t{release['rym_id']}: {release['release_link']}")
+                self.logger.log(f"Not found {i}. {release['artist']} - {release['release_title']}\n\t{release['rym_id']}: {release['release_link']}")
                 
         return songs
     

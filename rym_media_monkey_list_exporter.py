@@ -1,5 +1,5 @@
-import rym_list_parser, file_handler, com_handler, logger
-import os, sys
+import rym_list_parser, file_handler, com_handler
+import os
 from pathlib import Path
 
 
@@ -21,8 +21,6 @@ if __name__ == "__main__":
     
     list_path = abspath / source_path / playlist_name
     os.chdir(list_path)
-    
-    sys.stdout = logger.Logger()
 
     rym_list_parser = rym_list_parser.rym_list_parser(config)
     ComHandler = com_handler.ComHandler(config)

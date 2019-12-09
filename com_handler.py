@@ -29,34 +29,50 @@ class ComHandler(object):
             
         
     def process_rym_list(self, parsed_list, playlist_name):
-        songs = self.__get_songs_from_rym_playlist(parsed_list)
-        
         playlist_name = f"rym-{playlist_name}"
-        playlist = self.__get_playlist_by_name(playlist_name)
+        playlist = self.__get_playlist_by_name(self.__get_parent_playlist(), playlist_name)
+        total_releases = len(parsed_list.items())
+        releases_per_sub_list = self.config['releases_per_sub_list']
+        self.found = 0
         
-        if not songs or not playlist:
-            return False
-        
-        self.__write_songs_to_playlist(songs, playlist)
+        if 0 < releases_per_sub_list < total_releases:
+            sub_list_count = total_releases // releases_per_sub_list
+            for i in range(sub_list_count):
+                list_name_begin = str(i * releases_per_sub_list + 1).zfill(len(str(total_releases)))
+                list_name_end = str((i + 1) * releases_per_sub_list).zfill(len(str(total_releases)))
+                sub_playlist = self.__get_playlist_by_name(playlist, f"{list_name_begin}-{list_name_end}")
+                songs = self.__get_songs_from_rym_playlist(parsed_list, i * releases_per_sub_list + 1, (i + 1) * releases_per_sub_list)
+                self.__write_songs_to_playlist(songs, sub_playlist)
+            if total_releases % releases_per_sub_list:
+                list_name_begin = str(i * releases_per_sub_list + 1).zfill(len(str(total_releases)))
+                list_name_end = str(releases_per_sub_list).zfill(len(str(total_releases)))
+                sub_playlist = self.__get_playlist_by_name(playlist, f"{i * releases_per_sub_list + 1}-{releases_per_sub_list}")
+                songs = self.__get_songs_from_rym_playlist(parsed_list, i * releases_per_sub_list + 1, total_releases)
+                self.__write_songs_to_playlist(songs, sub_playlist)
+        else:
+            songs = self.__get_songs_from_rym_playlist(parsed_list, 1, total_releases)
+            self.__write_songs_to_playlist(songs, playlist)
+            
+        print(f"Found: {self.found} of {total_releases}")
         
         return True
     
     
-    def __get_songs_from_rym_playlist(self, parsed_list):
+    def __get_songs_from_rym_playlist(self, parsed_list, start, end):
         songs = self.SDB.NewSongList
-        found = 0
         
-        for i, release in parsed_list.items():
+        i = 0
+        for i, release in list(parsed_list.items())[start - 1 : end]:
             songs_release, found_by = self.__get_songs_from_release(release)
             if songs_release.Count > 0:
                 print(f"Found {i}. {release['artist']} - {release['release_title']} (found by {found_by})")
-                found += 1
+                self.found += 1
+                if found_by.startswith('name'):
+                    songs_release.UpdateAll()
                 self.__merge_song_lists(songs, songs_release)
             else:
                 print(f"Not found {i}. {release['artist']} - {release['release_title']}\n\t{release['rym_id']}: {release['release_link']}")
                 
-        print(f"Found: {found} of {i}. Writing to database...")
-        songs.UpdateAll()
         return songs
     
     
@@ -65,8 +81,8 @@ class ComHandler(object):
         playlist.AddTracks(songs)
             
     
-    def __get_playlist_by_name(self, name):
-        return self.__get_parent_playlist().CreateChildPlaylist(name)
+    def __get_playlist_by_name(self, parent, name):
+        return parent.CreateChildPlaylist(name)
     
     
     def __get_parent_playlist(self):

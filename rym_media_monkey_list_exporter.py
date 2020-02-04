@@ -12,11 +12,12 @@ if __name__ == "__main__":
         "parent_list_name": "RYMtoMM",
         "exact_matches_only" : False,
         'max_entries': 0,
-        'releases_per_sub_list' : 100,
+        'releases_per_sub_list' : 50,
+        'start_from_entry' : 1,
     }
 
 #    playlist_name = "2019"
-    playlist_name = 'Top Albums'
+    playlist_name = 'Post-Punk (A)'
 #    playlist_name = "Singles 1984"
     
     list_path = abspath / source_path / playlist_name

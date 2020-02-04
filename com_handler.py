@@ -35,20 +35,24 @@ class ComHandler(object):
         playlist = self.__get_playlist_by_name(self.__get_parent_playlist(), playlist_name)
         total_releases = len(parsed_list.items())
         releases_per_sub_list = self.config['releases_per_sub_list']
+        start_from_entry = self.config['start_from_entry']
         self.found = 0
         
         if 0 < releases_per_sub_list < total_releases:
             sub_list_count = total_releases // releases_per_sub_list
             for i in range(sub_list_count):
+                if start_from_entry > (i + 1) * releases_per_sub_list:
+                    continue
+                
                 list_name_begin = str(i * releases_per_sub_list + 1).zfill(len(str(total_releases)))
                 list_name_end = str((i + 1) * releases_per_sub_list).zfill(len(str(total_releases)))
-                sub_playlist = self.__get_playlist_by_name(playlist, f"{list_name_begin}-{list_name_end}")
+                sub_playlist = self.__get_playlist_by_name(playlist, f"{list_name_begin}-{list_name_end} ({playlist_name})")
                 songs = self.__get_songs_from_rym_playlist(parsed_list, i * releases_per_sub_list + 1, (i + 1) * releases_per_sub_list)
                 self.__write_songs_to_playlist(songs, sub_playlist)
             if total_releases % releases_per_sub_list:
                 list_name_begin = str(i * releases_per_sub_list + 1).zfill(len(str(total_releases)))
-                list_name_end = str(releases_per_sub_list).zfill(len(str(total_releases)))
-                sub_playlist = self.__get_playlist_by_name(playlist, f"{i * releases_per_sub_list + 1}-{releases_per_sub_list}")
+                list_name_end = str(total_releases).zfill(len(str(total_releases)))
+                sub_playlist = self.__get_playlist_by_name(playlist, f"{list_name_begin}-{list_name_end} ({playlist_name})")
                 songs = self.__get_songs_from_rym_playlist(parsed_list, i * releases_per_sub_list + 1, total_releases)
                 self.__write_songs_to_playlist(songs, sub_playlist)
         else:

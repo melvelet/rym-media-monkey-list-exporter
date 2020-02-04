@@ -9,6 +9,7 @@ class rym_list_parser(object):
 
 
     def parse_list(self, list_name):
+        print("Parsing RateYourMusic list...")
         parsed_list = {}
         for file in glob.glob("*.html"):
             page = file_handler.open_html(file)

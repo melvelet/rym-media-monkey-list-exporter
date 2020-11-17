@@ -1,6 +1,7 @@
 import os, glob
 from bs4 import BeautifulSoup
 import file_handler
+from pathlib import Path
 
 
 class rym_list_parser(object):
@@ -21,9 +22,9 @@ class rym_list_parser(object):
 
     def __parse_page(self, page):
         # table = page.find(class_='ooookiig').parent.parent.parent # top list
-        table = page.find(class_='mbgen') #custom charts
+        table = page.find(class_='charts_page') #custom charts
         parsed_page = {}
-        entries = [entry_source for i, entry_source in enumerate(list(table.children)) if i % 3 == 1]
+        entries = [entry_source for i, entry_source in enumerate(list(table.children)) if i > 4 and i % 2 != 0]
 
         for entry_source in entries:
             entry = self.__parse_entry(entry_source)
@@ -48,17 +49,20 @@ class rym_list_parser(object):
                 'release_link' : self.__get_release_link(entry_source),
                 'release_title' : self.__get_release_title(entry_source),
                 'release_type' : self.__get_release_type(entry_source),
-                'rym_id' : self.__get_rym_id(entry_source)
+                'rym_id' : self.__get_rym_id(entry_source),
+                'primary_genres' : self.__get_primary_genres(entry_source),
+                'secondary_genres' : self.__get_secondary_genres(entry_source),
+                'descriptors' : self.__get_descriptors(entry_source),
             }
         }
 
 
     def __get_release_title(self, entry_source):
-        return self.__format_attribute(entry_source.find(class_='album').string)
+        return self.__format_attribute(entry_source.find(class_='release').string)
     
     
     def __get_release_link(self, entry_source):
-        return f"https://rateyourmusic.com{self.__format_attribute(entry_source.find(class_='album')['href'])}"
+        return f"https://rateyourmusic.com{self.__format_attribute(entry_source.find(class_='release')['href'])}"
     
     
     def __get_release_type(self, entry_source):
@@ -69,7 +73,11 @@ class rym_list_parser(object):
         if len(entry_source.find_all(class_='artist')) > 1:
             return self.__get_collab_artists(entry_source.find_all(class_='artist'))
         else:
-            return self.__format_attribute(entry_source.find(class_='artist').string)
+            artist = entry_source.find(class_='artist')
+            if artist.string:
+                return self.__format_attribute(artist.string)
+            else:
+                return [self.__format_attribute(i) for i in artist.stripped_strings]
         
         
     def __get_artist_from_link(self, entry_source):
@@ -82,21 +90,41 @@ class rym_list_parser(object):
 
 
     def __get_collab_artists(self, collab_artists):
-        artist = ';'.join([ artist.string if len(artist.contents) == 1
-                            else f"{artist.contents[0]}[{artist.contents[1].string[1:-1]}]"
-                            for artist in collab_artists])
+        artist = [self.__format_attribute(i) for artist in collab_artists for i in artist.stripped_strings]
         return artist
 
     
     def __get_rym_id(self, entry_source):
-        return self.__format_attribute(entry_source.find(class_='album')['title'])
+        return self.__format_attribute(entry_source.find(class_='release')['title'])
 
 
     def __get_entry_no(self, entry_source):
-        return self.__format_attribute(entry_source.find(class_='ooookiig').string)
+        pos = list(entry_source.find(class_='topcharts_position').stripped_strings)[0]
+        return self.__format_attribute(pos)
+    
+    
+    def __get_multi_attribute_from_container(self, entry_source, attribute):
+        genres = list(entry_source.find(class_=f"topcharts_item_{attribute}_container").stripped_strings)
+        return [self.__format_attribute(genre) for genre in genres if genre != ',']
+    
+    
+    def __get_primary_genres(self, entry_source):
+        return self.__get_multi_attribute_from_container(entry_source, 'genres')
 
+
+    def __get_secondary_genres(self, entry_source):
+        return self.__get_multi_attribute_from_container(entry_source, 'secondarygenres')
+    
+    
+    def __get_descriptors(self, entry_source):
+        return self.__get_multi_attribute_from_container(entry_source, 'descriptors')
+    
 
     def __format_attribute(self, attribute):
+        if attribute.endswith(','):
+            attribute = attribute[0:-1]
+        if attribute.startswith('[') and attribute.endswith(']'):
+            attribute = attribute[1:-1]
         return f"{attribute}"
 
 
@@ -116,9 +144,15 @@ class rym_list_parser(object):
 
 if __name__ == "__main__":
     config = {
-        'max_entries': 15
-    }
-    list_name = '2019'
+        'max_entries': 100
+    }    
+    playlist_name = '1984 (A)'
+    
+    abspath = Path(os.path.dirname(os.path.realpath(__file__)))
+    source_path = 'lists'
+    list_path = abspath / source_path / playlist_name
+    os.chdir(list_path)
+    
     rym_list_parser = rym_list_parser(config)
-    parsed_list = rym_list_parser.parse_list(list_name)
-    file_handler.save_to_yaml(parsed_list, list_name)
+    parsed_list = rym_list_parser.parse_list(playlist_name)
+    file_handler.save_to_yaml(parsed_list, playlist_name)

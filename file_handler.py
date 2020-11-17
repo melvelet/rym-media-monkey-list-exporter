@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 
 def open_html(file_path):
-    with open(file_path, 'r', encoding="utf8") as stream:
+    with open(file_path, 'r', encoding="utf-8") as stream:
         try:
             soup = BeautifulSoup(stream, features="html.parser")
         except (IOError) as exc:

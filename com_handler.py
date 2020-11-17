@@ -37,6 +37,7 @@ class ComHandler(object):
         releases_per_sub_list = self.config['releases_per_sub_list']
         start_from_entry = self.config['start_from_entry']
         self.found = 0
+        self.found_first_time = 0
         
         if 0 < releases_per_sub_list < total_releases:
             sub_list_count = total_releases // releases_per_sub_list
@@ -59,7 +60,7 @@ class ComHandler(object):
             songs = self.__get_songs_from_rym_playlist(parsed_list, 1, total_releases)
             self.__write_songs_to_playlist(songs, playlist)
             
-        self.logger.log(f"Found: {self.found} of {total_releases}")
+        self.logger.log(f"Found: {self.found} ({self.found_first_time} for the first time) of {total_releases}")
         self.logger.close()
         
         return True
@@ -76,6 +77,7 @@ class ComHandler(object):
                 self.found += 1
                 if found_by.startswith('name'):
                     songs_release.UpdateAll()
+                    self.found_first_time += 1
                 self.__merge_song_lists(songs, songs_release)
             else:
                 self.logger.log(f"Not found {i}. {release['artist']} - {release['release_title']}\n\t{release['rym_id']}: {release['release_link']}")
@@ -157,21 +159,28 @@ class ComHandler(object):
         
         search_parameter, search_variable = self.__get_search_parameter_and_variable(release)
         
-        songs = self.db.QuerySongs(f"Songs.Artist LIKE '{self.__escape_string(artist)}' AND Songs.{search_parameter} LIKE '{self.__escape_string(search_variable)}'")
+        if type(artist) != list:
+            songs = self.db.QuerySongs(f"Songs.Artist LIKE '{self.__escape_string(artist)}' AND Songs.{search_parameter} LIKE '{self.__escape_string(search_variable)}'")
 
-        if songs.EOF and not self.config['exact_matches_only']:
+            if songs.EOF and not self.config['exact_matches_only']:
+                partial_match = True
+                for i in range(3):
+                    if i == 0:
+                        songs = self.db.QuerySongs(f"Songs.Artist LIKE '%{self.__escape_string(artist)}%' AND Songs.{search_parameter} LIKE '%{self.__escape_string(search_variable)}%'")
+                    if i == 1:
+                        if artist.lower() != artist_from_link:
+                            songs = self.db.QuerySongs(f"Songs.Artist LIKE '%{self.__escape_string(artist_from_link)}%' AND Songs.{search_parameter} LIKE '%{self.__escape_string(search_variable)}%'")
+                    if i == 2:
+                            temp_songs= self.__get_songs_from_split_artist_string(release)
+                            if temp_songs:
+                                songs = temp_songs
+                                temp_songs = None
+                    if not songs.EOF:
+                        break
+        else:
             partial_match = True
-            for i in range(3):
-                if i == 0:
-                    songs = self.db.QuerySongs(f"Songs.Artist LIKE '%{self.__escape_string(artist)}%' AND Songs.{search_parameter} LIKE '%{self.__escape_string(search_variable)}%'")
-                if i == 1:
-                    if artist.lower() != artist_from_link:
-                        songs = self.db.QuerySongs(f"Songs.Artist LIKE '%{self.__escape_string(artist_from_link)}%' AND Songs.{search_parameter} LIKE '%{self.__escape_string(search_variable)}%'")
-                if i == 2:
-                        temp_songs= self.__get_songs_from_split_artist_string(release)
-                        if temp_songs:
-                            songs = temp_songs
-                            temp_songs = None
+            for artist_i in artist:
+                songs = self.db.QuerySongs(f"Songs.Artist LIKE '{self.__escape_string(artist_i)}' AND Songs.{search_parameter} LIKE '{self.__escape_string(search_variable)}'")
                 if not songs.EOF:
                     break
        

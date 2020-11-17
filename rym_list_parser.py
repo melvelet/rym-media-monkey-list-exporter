@@ -95,7 +95,7 @@ class rym_list_parser(object):
 
     
     def __get_rym_id(self, entry_source):
-        return self.__format_attribute(entry_source.find(class_='release')['title'])
+        return self.__format_attribute(entry_source.find(class_='release')['title'], remove_parenthesis=False)
 
 
     def __get_entry_no(self, entry_source):
@@ -120,10 +120,10 @@ class rym_list_parser(object):
         return self.__get_multi_attribute_from_container(entry_source, 'descriptors')
     
 
-    def __format_attribute(self, attribute):
+    def __format_attribute(self, attribute, remove_parenthesis=True):
         if attribute.endswith(','):
             attribute = attribute[0:-1]
-        if attribute.startswith('[') and attribute.endswith(']'):
+        if remove_parenthesis and attribute.startswith('[') and attribute.endswith(']'):
             attribute = attribute[1:-1]
         return f"{attribute}"
 

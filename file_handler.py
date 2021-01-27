@@ -13,13 +13,13 @@ def open_html(file_path):
 
 
 def save_to_yaml(content, file_name):
-    with open(f"rym-{file_name}.yml", 'w') as outfile:
+    with open(f"{file_name}.yml", 'w') as outfile:
         yaml.safe_dump(content, outfile, default_flow_style=False)
-        print(f"Results written to rym-{file_name}.yml")
+        print(f"Results written to {file_name}.yml")
 
 
 def open_yaml(file_name):
-    with open(f"rym-{file_name}.yml") as stream:
+    with open(f"{file_name}.yml") as stream:
         try:
             return yaml.safe_load(stream)
         except yaml.YAMLError as exc:
@@ -34,6 +34,6 @@ def ordered_dump(data, file_name):
             yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
             data.items())
     OrderedDumper.add_representer(OrderedDict, __dict_representer)
-    with open(f"rym-{file_name}.yml", 'w') as outfile:
+    with open(f"{file_name}.yml", 'w') as outfile:
         yaml.dump(data, outfile, OrderedDumper)
         print(f"Results written to rym-{file_name}.yml")

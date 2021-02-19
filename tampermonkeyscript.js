@@ -40,19 +40,19 @@
                 pri_genres = element.children[2].children[2].children[0];
                 sec_genres = element.children[2].children[2].children[1];
     
-                complete_string = createString(pri_genres, sec_genres, true);
+                complete_string = createString(pri_genres, sec_genres);
                 createButton(element, index, complete_string);
             }
         }
     } else {
-        releases = document.getElementsByClassName('chart_detail_line3');
+        releases = document.getElementsByClassName('chart_item_release');
         for (let index = 0; index < releases.length; index++) {
             const element = releases[index];
-            pri_genres = element.children;
-            sec_genres = element.children;
+            pri_genres = element.getElementsByClassName("topcharts_item_genres_container");
+            sec_genres = element.getElementsByClassName("topcharts_item_secondarygenres_container");
 
-            complete_string = createString(pri_genres, sec_genres, true);
-            createButton(element, index, complete_string);
+            complete_string = createString(pri_genres, sec_genres);
+            createButton(element.getElementsByClassName("topcharts_textbox_bottom")[0], index, complete_string);
         }
     }
 
@@ -75,7 +75,7 @@ function copyStringToClipboard (str) {
     document.body.removeChild(el);
  }
 
-function createString(pri_genres, sec_genres, charts) {
+function createString(pri_genres, sec_genres) {
     if (pri_genres.length == 0) {
         pri_genres = '';
     } else {
@@ -84,12 +84,7 @@ function createString(pri_genres, sec_genres, charts) {
     if (sec_genres.length == 0) {
         sec_genres = '';
     } else {
-        if (charts) {
-            sec_genres = sec_genres[1].children;
-        } else {
             sec_genres = sec_genres[0].children;
-        }
-        
     }
     var pri_string = '', sec_string = '';
 
@@ -97,14 +92,14 @@ function createString(pri_genres, sec_genres, charts) {
         if (pri_string != '') {
             pri_string += '; ';
         }
-        pri_string += pri_genres[index].innerHTML.replace("&amp;", "&");
+        pri_string += getGenreStringFromElement(pri_genres[index]);
     }
 
     for (let index = 0; index < sec_genres.length; index++) {
         if (sec_string != '') {
             sec_string += '; ';
         }
-        sec_string += sec_genres[index].innerHTML.replace("&amp;", "&");
+        sec_string += getGenreStringFromElement(sec_genres[index]);
     }
 
     var complete_string = '' + pri_string;
@@ -116,9 +111,20 @@ function createString(pri_genres, sec_genres, charts) {
     return complete_string;
 }
 
+function getGenreStringFromElement(element) {
+    var result;
+    if (element.innerHTML.startsWith("<a")) {
+      result = element.innerText;
+    } else {
+      result = element.innerHTML;
+    }
+    return result.replace("&amp;", "&").replace(", ", "");
+}
+
 function createButton(area, number, complete_string) {
     area.innerHTML += "<button class='copy_btn' id='pri_button" + number + "'>copy genres</button>";
     var pri_button = document.getElementById('pri_button' + number);
+    pri_button.style.cssText = "color: #55c;border: 1px #ddd solid;background: #f4f4f4;text-decoration: none;border-radius: 3px;padding: 2px;width: 80%;max-width: 140px;";
     pri_button.addEventListener('click', function() {
         copyStringToClipboard(complete_string);
     });

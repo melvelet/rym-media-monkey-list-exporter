@@ -8,7 +8,6 @@
 // @match        https://rateyourmusic.com/list/*
 // @match        https://rateyourmusic.com/charts/*
 // @grant        none
-// @require      https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js
 // ==/UserScript==
 
 (function() {
@@ -33,14 +32,14 @@
             createButton(pri_genres, index, complete_string, 25);
         }
     } else {
-        releases = document.getElementsByClassName('chart_item_release');
+        releases = document.getElementsByClassName('page_charts_section_charts_item object_release');
         for (let index = 0; index < releases.length; index++) {
             const element = releases[index];
-            pri_genres = element.getElementsByClassName("topcharts_item_genres_container")[0];
-            sec_genres = element.getElementsByClassName("topcharts_item_secondarygenres_container")[0];
+            pri_genres = element.getElementsByClassName("page_charts_section_charts_item_genres_primary")[0];
+            sec_genres = element.getElementsByClassName("page_charts_section_charts_item_genres_secondary")[0];
 
             complete_string = createString(pri_genres, sec_genres);
-            createButton(element.getElementsByClassName("topcharts_textbox_bottom")[0], index, complete_string, 0);
+            createButton(element.getElementsByClassName("page_charts_section_charts_item_media_links")[0], index, complete_string, 0);
         }
     }
 })();
@@ -59,12 +58,16 @@ function copyStringToClipboard(str) {
 function createString(pri_genres, sec_genres) {
     var genres = [];
 
-    for (let index = 0; index < pri_genres.children.length; index++) {
-        genres.push(getGenreStringFromElement(pri_genres.children[index]));
+    if (pri_genres) {
+      for (let index = 0; index < pri_genres.children.length; index++) {
+          genres.push(getGenreStringFromElement(pri_genres.children[index]));
+      }
     }
 
-    for (let index = 0; index < sec_genres.children.length; index++) {
-        genres.push(getGenreStringFromElement(sec_genres.children[index]));
+    if (sec_genres) {
+      for (let index = 0; index < sec_genres.children.length; index++) {
+          genres.push(getGenreStringFromElement(sec_genres.children[index]));
+      }
     }
 
     return genres.join('; ');

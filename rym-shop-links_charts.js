@@ -211,7 +211,7 @@
 
     function updateShopLinks() {
         if (window.location.pathname.includes('/charts/')) {
-            generateChartShopLinks(format, releaseSetting);
+            updateAllChartShopLinks();
         } else {
             generateReleaseShopLinks(format, releaseSetting);
         }
@@ -261,7 +261,8 @@
 
             const shopUrl = shop.linkBuilder(cleanReleaseTitle, cleanArtistName, format, releaseSetting);
 
-            shopButton.addEventListener('click', () => {
+            shopButton.addEventListener('mousedown', () => {
+                e.preventDefault();
                 window.open(shopUrl, '_blank');
             });
 
@@ -272,88 +273,160 @@
         mediaLinkContainer.appendChild(buttonContainer);
     }
 
-    // Generate shop links for /charts/ pages
-    function generateChartShopLinks(format, releaseSetting) {
-        // Remove any existing shop buttons
+    // Function to generate shop links for chart items
+   function generateChartShopLinks(item) {
+       // Remove existing shop links first
+       const existingButtons = item.querySelectorAll('.shop-button');
+       existingButtons.forEach(button => button.remove());
+
+       // Get the necessary elements with null checks
+       const titleElement = item.querySelector('.page_charts_section_charts_item_link');
+       const artistElement = item.querySelector('.page_charts_section_charts_item_credited_links_primary');
+       const mediaLinksContainer = item.querySelector('.page_charts_section_charts_item_media_links');
+
+       // Early return if required elements don't exist
+       if (!titleElement || !artistElement || !mediaLinksContainer) {
+           return;
+       }
+
+       const cleanReleaseTitle = titleElement.textContent.trim().toLowerCase();
+       const cleanArtistName = artistElement.textContent
+           .replace(/\s+/g, ' ')
+           .replace(/\r?\n/g, '')
+           .trim()
+           .toLowerCase();
+
+       // Create container for shop links
+       const linksContainer = document.createElement('div');
+       linksContainer.className = 'media_link_container';
+       linksContainer.style.marginTop = '0.5em';
+       linksContainer.style.display = 'flex';
+       linksContainer.style.justifyContent = 'flex-end'; // Added to align content to the right
+
+       // Add shop links based on title and artist
+       const shopLinks = createShopLinks(cleanReleaseTitle, cleanArtistName);
+       linksContainer.appendChild(shopLinks);
+
+       // Insert links into the media links container
+       mediaLinksContainer.appendChild(linksContainer);
+   }
+
+   function createShopLinks(title, artist) {
+       const container = document.createElement('div');
+       container.style.display = 'flex';
+       container.style.flexDirection = 'row';
+       container.style.gap = '5px';
+       container.style.justifyContent = 'flex-end'; // Changed from flex-start to flex-end
+       container.style.width = '100%'; // Added to ensure full width
+
+       for (const [shopName, shop] of Object.entries(shopLinks)) {
+           const shopButton = document.createElement('button');
+           shopButton.classList.add('shop-button');
+           shopButton.style.color = 'black';
+           shopButton.style.border = '1px solid var(--gen-blue-med)';
+           shopButton.style.backgroundColor = '#d3d3d3';
+           shopButton.style.textDecoration = 'none';
+           shopButton.style.borderRadius = '3px';
+           shopButton.style.padding = '2px 6px';
+           shopButton.style.fontSize = '0.8em';
+           shopButton.style.whiteSpace = 'nowrap';
+           shopButton.textContent = shopName;
+
+           const shopUrl = shop.linkBuilder(title, artist, format, releaseSetting);
+
+           shopButton.addEventListener('mousedown', (e) => {
+               e.preventDefault();
+               window.open(shopUrl, '_blank');
+           });
+
+           container.appendChild(shopButton);
+       }
+
+       return container;
+   }
+
+    function observePageChanges() {
+        const chartsContainer = document.querySelector('#page_charts_section_charts');
+        if (!chartsContainer) return;
+
+        // Create and setup the observer here instead of globally
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.classList?.contains('page_charts_section_charts_item')) {
+                        generateChartShopLinks(node);
+                    }
+                });
+            });
+        });
+
+        // Start observing
+        observer.observe(chartsContainer, {
+            childList: true,
+            subtree: false
+        });
+
+        // Setup the update observer
+        const updateObserver = new MutationObserver((mutations) => {
+            const shouldUpdate = mutations.some(mutation =>
+                mutation.type === 'childList' &&
+                (mutation.addedNodes.length > 0 || mutation.removedNodes.length > 0)
+            );
+
+            if (shouldUpdate) {
+                debouncedUpdate();
+            }
+        });
+
+        updateObserver.observe(chartsContainer, {
+            childList: true,
+            subtree: false
+        });
+    }
+
+    // Add this near the top of your IIFE, after your initial variable declarations
+    const DEBOUNCE_DELAY = 250; // milliseconds
+
+    // Debounce helper function
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // Function to update shop links for all chart items
+    function updateAllChartShopLinks() {
+        // Remove only shop buttons
         const existingButtons = document.querySelectorAll('.shop-button');
         existingButtons.forEach(button => button.remove());
 
-        const chartEntries = document.querySelectorAll('.page_charts_section_charts_item');
-
-        chartEntries.forEach(entry => {
-            const releaseLink = entry.querySelector('.page_charts_section_charts_item_link.release');
-            const artistLink = entry.querySelector('.page_charts_section_charts_item_credited_links_primary .artist');
-
-            if (!releaseLink || !artistLink) return;
-
-            const releaseTitle = releaseLink.textContent.trim();
-            const artistName = artistLink.textContent.trim();
-
-            const cleanReleaseTitle = releaseTitle.split('\n')[0].trim().toLowerCase();
-            const cleanArtistName = artistName.toLowerCase();
-
-            const buttonContainer = document.createElement('div');
-            buttonContainer.classList.add('shop-buttons-container');
-            buttonContainer.style.display = 'flex';
-            buttonContainer.style.gap = '10px';
-
-            for (const [shopName, shop] of Object.entries(shopLinks)) {
-                const shopButton = document.createElement('button');
-                shopButton.classList.add('shop-button'); // Assign a common class
-                shopButton.textContent = shopName;
-                shopButton.style.color = 'black';
-                shopButton.style.border = '1px solid var(--gen-blue-med)';
-                shopButton.style.backgroundColor = '#d3d3d3';
-                shopButton.style.textDecoration = 'none';
-                shopButton.style.borderRadius = '3px';
-                shopButton.style.padding = '2px';
-                shopButton.style.fontSize = '0.8em';
-
-                const shopUrl = shop.linkBuilder(cleanReleaseTitle, cleanArtistName, format, releaseSetting);
-
-                shopButton.addEventListener('click', () => {
-                    window.open(shopUrl, '_blank');
-                });
-
-                buttonContainer.appendChild(shopButton);
-            }
-
-            const mediaLinkContainer = entry.querySelector('.page_charts_section_charts_item_stats_media');
-            mediaLinkContainer.appendChild(buttonContainer);
-        });
+        // Add new shop links
+        const chartItems = document.querySelectorAll('.page_charts_section_charts_item');
+        chartItems.forEach(item => generateChartShopLinks(item));
     }
 
+    // Debounced version of the update function
+    const debouncedUpdate = debounce(() => {
+        if (window.location.pathname.includes('/charts/')) {
+            updateAllChartShopLinks();
+        } else if (window.location.pathname.includes('/release/')) {
+            generateReleaseShopLinks(format, releaseSetting);
+        }
+    }, DEBOUNCE_DELAY);
+
+    // Initialize
     updateButtonStyles();
-    updateShopLinks();
-
-    function observePageChanges() {
-        const paginationLinks = document.querySelectorAll('.ui_pagination_btn.ui_pagination_number');
-
-        paginationLinks.forEach(link => {
-            link.addEventListener('click', (event) => {
-                event.preventDefault();  // Prevent the default link behavior (full reload)
-
-                // Trigger page change (simulate click)
-                const href = link.getAttribute('href');
-                if (href) {
-                    window.history.pushState({}, '', href);  // Update the URL without full reload
-                    // Wait for the page to finish loading the new content
-                    setTimeout(() => {
-                        // Regenerate buttons on new page
-                        updateShopLinks();
-                    }, 2000);  // Wait 1 second for page content to be loaded (you can adjust the delay)
-                }
-            });
-        });
-    }
-
-    // Initially, when the page is loaded, call observePageChanges to track pagination links
+    debouncedUpdate();
     observePageChanges();
 
-    // Monitor page changes dynamically (in case of further page navigation within the same session)
+    // Handle navigation
     window.addEventListener('popstate', () => {
-        setTimeout(() => {
-            updateShopLinks();  // Regenerate shop links when navigating back/forward in history
-        }, 1000);  // Wait a bit for content to load (adjust if needed)
+        setTimeout(debouncedUpdate, 500);
     });
 })();

@@ -153,12 +153,11 @@
 
     // Shop link builder functions (e.g., for Amazon, Booklooker, etc.)
     const shopLinks = {
-        "Amazon": {
+        "AM": {
             linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
-                const formattedReleaseTitle = releaseTitle.trim().toLowerCase();
-                const formattedArtistName = artistName.trim().toLowerCase();
-
-                let url = `https://www.amazon.de/s?k=${formattedArtistName}+${formattedReleaseTitle}&rh=n%3A255882`;
+                let url = `https://www.amazon.de/s?k=${artistName}`;
+                if (releaseSetting === 'release') url += `+${releaseTitle}`;
+                url += `&rh=n%3A255882`;
 
                 if (format === "cd") {
                     url += `%2Cp_n_binding_browse-bin%3A379146011`;  // CD format
@@ -168,14 +167,10 @@
                     url += `%2Cp_n_binding_browse-bin%3A379147011`;  // Cassette format
                 }
 
-                if (format !== "general") {
-                    url += `&sprefix=${formattedReleaseTitle}`;
-                }
-
                 return url;
             }
         },
-        "Booklooker": {
+        "BL": {
             linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
                 let formatText = "";
                 if (format !== "general") {
@@ -188,18 +183,100 @@
                     }
                 }
 
-                const formattedReleaseTitle = releaseTitle.trim().toLowerCase();
-                const formattedArtistName = artistName.trim().toLowerCase();
-
-                let url = `https://www.booklooker.de/Musik/Angebote/artist=${formattedArtistName}&musicFormatCategory=${formatText}?sortOrder=preis_euro`;
+                let url = `https://www.booklooker.de/Musik/Angebote/artist=${artistName}&musicFormatCategory=${formatText}?sortOrder=preis_euro`;
 
                 // Add title only if release setting is "release" (not "band")
                 if (releaseSetting === "release") {
-                    url += `&titel=${formattedReleaseTitle}`;
+                    url += `&titel=${releaseTitle}`;
                 }
 
                 return url;
             }
+        },
+//        "EB": {
+//              linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
+//                  // eBay link structure
+//                  let baseLink = "https://www.ebay.de/sch/i.html?_nkw=";
+//                  let formattedArtist = artistName.replace(/\s+/g, "+");
+//                  let formattedRelease = releaseTitle.replace(/\s+/g, "+");
+//                  let formattedFormat = format && format !== 'general' ? `+${format}` : ""; // Format (cd, vinyl, etc.)
+//                  let releaseType = releaseSetting === 'band' ? '' : `+${formattedRelease}`; // If Band, no release title
+//                  return `${baseLink}${formattedArtist}${releaseType}${formattedFormat}`;
+//              }
+//        },
+        "DC": {
+              linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
+                  let formatText = ""; // Default to empty string for general
+
+                  // If the format is CD, use uppercase. If it's not "general", capitalize other formats
+                  if (format === "cd") {
+                      formatText = format.toUpperCase();  // "CD" should be in all caps
+                  } else if (format !== "general") {
+                      formatText = capitalize(format);  // Capitalize the format for other cases (Vinyl, Cassette)
+                  }
+
+                  // Construct the base Discogs URL
+                  let url = `https://www.discogs.com/search/?q=${artistName}`;
+                  if (releaseSetting === 'release') url += `+${releaseTitle}`;
+                  url += `&type=all`;
+
+                  // If the format is not "general", add format_exact to the URL
+                  if (format !== "general") {
+                      url += `&format_exact=${formatText}`;
+                  }
+
+                  // Return the constructed URL
+                  return url;
+              }
+        },
+        "HHV": {
+              linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
+                  let formatText = ""; // Default to empty string for general
+
+                  // If the format is CD, use uppercase. If it's not "general", capitalize other formats
+                  if (format === "cd") {
+                      formatText = "M71N4S11";
+                  } else if (format === "vinyl") {
+                      formatText = "M65N4S11";
+                  } else if (format === "cassette") {
+                      formatText = "M74N4S11";
+                  } else if (format === "general") {
+                      formatText = "S11";
+                  }
+
+                  // Construct the base HHV URL
+                  let url = `https://www.hhv.de/katalog/filter/suche-${formatText}?af=true&term=${artistName}`;
+                  if (releaseSetting === 'release') url += `+${releaseTitle}`;
+
+                  // Return the constructed URL
+                  return url;
+              }
+        },
+        "CJP": {
+              linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
+                  // Construct the base CDJapan URL
+                  let url = `https://www.cdjapan.co.jp/searchuni?`;
+                  if (format !== 'general') url += `term.media_format=${format}`;
+                  url += `&q=${artistName}`;
+                  if (releaseSetting === 'release') url += `+${releaseTitle}`;
+                  url += `&opt.exclude_eoa=on`;
+
+                  // Return the constructed URL
+                  return url;
+              }
+        },
+        "KA": {
+              linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
+                  // Construct the base Kleinanzeigen URL
+                  let url = `https://www.kleinanzeigen.de/s-musik-cds/${artistName}`;
+                  if (releaseSetting === 'release') url += `+${releaseTitle}`;
+                  if (format !== 'general' && format !== 'cassette') url += `+${format}`;
+                  if (format === 'cassette') url += `+kassette`;
+                  url += `/k0c78`;
+
+                  // Return the constructed URL
+                  return url;
+              }
         },
         // Additional shop link builders...
     };
@@ -223,16 +300,13 @@
         const existingButtons = document.querySelectorAll('.shop-button');
         existingButtons.forEach(button => button.remove());
 
-        const releaseTitleElement = document.querySelector('.album_title');
+        const releaseTitleElement = document.querySelector('.album_title').childNodes[0];
         const artistNameElement = document.querySelector('.album_artist_small a');
 
         if (!releaseTitleElement || !artistNameElement) return;
 
-        const releaseTitle = releaseTitleElement.textContent.trim();
-        const artistName = artistNameElement.textContent.trim();
-
-        const cleanReleaseTitle = releaseTitle.split('\n')[0].trim().toLowerCase();
-        const cleanArtistName = artistName.toLowerCase();
+        const cleanReleaseTitle = getCleanedString(releaseTitleElement);
+        const cleanArtistName = getCleanedString(artistNameElement);
 
         const buttonContainer = document.createElement('div');
         buttonContainer.classList.add('shop-buttons-container');
@@ -257,13 +331,16 @@
             shopButton.style.marginLeft = '25px';
             shopButton.style.maxWidth = '160px';
             shopButton.style.fontSize = '0.8em';
+            shopButton.style.cursor = 'pointer';
             shopButton.textContent = shopName;
 
             const shopUrl = shop.linkBuilder(cleanReleaseTitle, cleanArtistName, format, releaseSetting);
 
-            shopButton.addEventListener('mousedown', () => {
-                e.preventDefault();
-                window.open(shopUrl, '_blank');
+            shopButton.addEventListener('mousedown', (e) => {
+                if (e.button !== 2) {
+                    e.preventDefault();
+                    window.open(shopUrl, '_blank');
+                }
             });
 
             buttonContainer.appendChild(shopButton);
@@ -289,12 +366,8 @@
            return;
        }
 
-       const cleanReleaseTitle = titleElement.textContent.trim().toLowerCase();
-       const cleanArtistName = artistElement.textContent
-           .replace(/\s+/g, ' ')
-           .replace(/\r?\n/g, '')
-           .trim()
-           .toLowerCase();
+       const cleanReleaseTitle = getCleanedString(titleElement);
+       const cleanArtistName = getCleanedString(artistElement);
 
        // Create container for shop links
        const linksContainer = document.createElement('div');
@@ -329,20 +402,32 @@
            shopButton.style.borderRadius = '3px';
            shopButton.style.padding = '2px 6px';
            shopButton.style.fontSize = '0.8em';
+           shopButton.style.cursor = 'pointer';
            shopButton.style.whiteSpace = 'nowrap';
            shopButton.textContent = shopName;
 
            const shopUrl = shop.linkBuilder(title, artist, format, releaseSetting);
 
            shopButton.addEventListener('mousedown', (e) => {
-               e.preventDefault();
-               window.open(shopUrl, '_blank');
+               if (e.button !== 2) {
+                   e.preventDefault();
+                   window.open(shopUrl, '_blank');
+               }
            });
 
            container.appendChild(shopButton);
        }
 
        return container;
+   }
+
+   function getCleanedString(item) {
+        return item.textContent
+           .replace('&', ' ')
+           .replace(/\s+/g, ' ')
+           .replace(/\r?\n/g, '')
+           .trim()
+           .toLowerCase();
    }
 
     function observePageChanges() {

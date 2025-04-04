@@ -233,7 +233,6 @@
               linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
                   let formatText = ""; // Default to empty string for general
 
-                  // If the format is CD, use uppercase. If it's not "general", capitalize other formats
                   if (format === "cd") {
                       formatText = "M71N4S11";
                   } else if (format === "vinyl") {
@@ -277,6 +276,26 @@
                   // Return the constructed URL
                   return url;
               }
+        },
+        "MM": {
+            linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
+                if (format === "cd") {
+                   formatText = "Audio CD,";
+                } else if (format === "vinyl") {
+                   formatText = "Vinyl,";
+                } else if (format === "cassette") {
+                   formatText = "Hörkassette,";
+                } else if (format === "general") {
+                   formatText = "produkte-C0";
+                }
+
+                // Construct the base Kleinanzeigen URL
+                let url = `https://www.medimops.de/${formatText}/?fcIsSearch=1&listorder=asc&listorderby=oxvarminprice&searchparam=${artistName}`;
+                if (releaseSetting === 'release') url += `+${releaseTitle}`;
+
+                // Return the constructed URL
+                return url;
+            }
         },
         // Additional shop link builders...
     };

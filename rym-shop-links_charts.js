@@ -191,7 +191,7 @@
                 const formattedReleaseTitle = releaseTitle.trim().toLowerCase();
                 const formattedArtistName = artistName.trim().toLowerCase();
 
-                let url = `https://www.booklooker.de/Musik/Angebote/artist=${formattedArtistName}&musicFormatCategory=${formatText}`;
+                let url = `https://www.booklooker.de/Musik/Angebote/artist=${formattedArtistName}&musicFormatCategory=${formatText}?sortOrder=preis_euro`;
 
                 // Add title only if release setting is "release" (not "band")
                 if (releaseSetting === "release") {

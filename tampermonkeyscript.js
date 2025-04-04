@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         RYM genre exporter
+// @name         RYM genre + descriptor exporter (all pages)
 // @namespace    http://tampermonkey.net/
-// @version      0.2
-// @description  try to take over the world!
+// @version      0.3
+// @description  Export genres, scenes, and descriptors from RYM (release, list, charts pages)
 // @author       You
 // @match        https://rateyourmusic.com/release/*
 // @match        https://rateyourmusic.com/list/*
@@ -10,86 +10,151 @@
 // @grant        none
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
-    var pri_genres, sec_genres, complete_string, area, releases;
-    if (window.location.href.indexOf("/release/") > -1) {
-        pri_genres = document.getElementsByClassName('release_pri_genres')[0];
-        sec_genres = document.getElementsByClassName('release_sec_genres')[0];
 
-        complete_string = createString(pri_genres, sec_genres);
+    // -------- RELEASE PAGE --------
+    if (window.location.href.includes("/release/")) {
+        const primaryGenres = document.querySelector('.release_pri_genres');
+        const secondaryGenres = document.querySelector('.release_sec_genres');
+        const sceneSpan = findSceneSpan();
+        const descriptorSpan = document.querySelector('.release_pri_descriptors');
 
-        area = document.getElementsByClassName('release_pri_genres')[0].parentNode.parentNode;
-        createButton(area, '', complete_string, 25);
+        const genreSceneString = createString(primaryGenres, secondaryGenres, sceneSpan);
+        const descriptorString = createDescriptorString(descriptorSpan);
 
-    } else if (window.location.href.indexOf("/list/") > -1) {
-        releases = document.getElementsByClassName('extra_metadata_genres');
-        for (let index = 0; index < releases.length; index++) {
-            pri_genres = releases[index];
-            sec_genres = pri_genres.parentNode.children[1];
-
-            complete_string = createString(pri_genres, sec_genres);
-            createButton(pri_genres, index, complete_string, 25);
+        if (primaryGenres) {
+            const genreArea = primaryGenres.closest('td');
+            createButton(genreArea, 'genre_btn', genreSceneString, 25, 'copy genres + scenes');
         }
-    } else {
-        releases = document.getElementsByClassName('page_charts_section_charts_item object_release');
-        for (let index = 0; index < releases.length; index++) {
-            const element = releases[index];
-            pri_genres = element.getElementsByClassName("page_charts_section_charts_item_genres_primary")[0];
-            sec_genres = element.getElementsByClassName("page_charts_section_charts_item_genres_secondary")[0];
 
-            complete_string = createString(pri_genres, sec_genres);
-            createButton(element.getElementsByClassName("page_charts_section_charts_item_media_links")[0], index, complete_string, 0);
+        if (descriptorSpan) {
+            const descriptorArea = descriptorSpan.closest('td');
+            createButton(descriptorArea, 'desc_btn', descriptorString, 25, 'copy descriptors');
         }
+
+    // -------- LIST PAGE --------
+    } else if (window.location.href.includes("/list/")) {
+        const listEntries = document.querySelectorAll('.main_entry');
+        listEntries.forEach((entry, index) => {
+            const genres = entry.querySelector('.extra_metadata_genres');
+            const secondaryGenres = entry.querySelector('.extra_metadata_sec_genres');
+            const descriptors = entry.querySelector('.extra_metadata_descriptors');
+
+            const genreString = createString(genres, secondaryGenres, null);
+            const descriptorString = descriptors ? descriptors.textContent.trim() : '';
+
+            const buttonContainer = document.createElement('div');
+            buttonContainer.style.display = 'flex';
+            buttonContainer.style.gap = '10px';
+            buttonContainer.style.marginTop = '10px';
+
+            if (genreString.length > 0) {
+                createButton(buttonContainer, `list_genres_btn_${index}`, genreString, 0, 'copy genres');
+            }
+
+            if (descriptorString.length > 0) {
+                createButton(buttonContainer, `list_desc_btn_${index}`, descriptorString, 0, 'copy descriptors');
+            }
+
+            entry.appendChild(buttonContainer);
+        });
+
+    // -------- CHARTS PAGE --------
+    } else if (window.location.href.includes("/charts/")) {
+        const chartReleases = document.querySelectorAll('.page_charts_section_charts_item_info');
+        chartReleases.forEach((release, index) => {
+            const primaryGenres = release.querySelector('.page_charts_section_charts_item_genres_primary');
+            const secondaryGenres = release.querySelector('.page_charts_section_charts_item_genres_secondary');
+            const descriptors = release.querySelector('.page_charts_section_charts_item_genre_descriptors');
+            const target = release.querySelector('.page_charts_section_charts_item_media_links');
+
+            const genreString = createString(primaryGenres, secondaryGenres, null);
+            const descriptorString = descriptors ? Array.from(descriptors.children).map(e => e.textContent.trim()).join('; ') : '';
+
+            if (target) {
+                const buttonContainer = document.createElement('div');
+                buttonContainer.style.display = 'flex';
+                buttonContainer.style.gap = '10px';
+
+                if (genreString.length > 0) {
+                    createButton(buttonContainer, `chart_genres_btn_${index}`, genreString, 0, 'copy genres');
+                }
+
+                if (descriptorString.length > 0) {
+                    createButton(buttonContainer, `chart_desc_btn_${index}`, descriptorString, 0, 'copy descriptors');
+                }
+
+                target.appendChild(buttonContainer);
+            }
+        });
+    }
+
+
+
+
+    // -------- HELPERS --------
+    function createString(pri, sec, scenes) {
+        const all = [];
+        [pri, sec, scenes].forEach(group => {
+            if (group) {
+                for (let i = 0; i < group.children.length; i++) {
+                    all.push(cleanText(group.children[i]));
+                }
+            }
+        });
+        return all.join('; ');
+    }
+
+    function createDescriptorString(descSpan) {
+        const descriptors = [];
+        if (descSpan) {
+            descSpan.innerText.split(',').forEach(d => {
+                const trimmed = d.trim();
+                if (trimmed.length > 0) descriptors.push(trimmed);
+            });
+        }
+        return descriptors.join('; ');
+    }
+
+    function cleanText(el) {
+        return el.innerText.replace("&amp;", "&").replace(", ", "");
+    }
+
+    function createButton(area, id, text, margin, label) {
+        const button = document.createElement('button');
+        button.className = 'copy_btn';
+        button.id = id;
+        button.textContent = label;
+        button.style.cssText = `color: black;border: 1px var(--gen-blue-med) solid;background-color: var(--gen-blue-med);text-decoration: none;border-radius: 3px;padding: 2px;margin-left: ${margin}px;max-width: 160px;font-size: 0.8em;`;
+        button.addEventListener('click', function () {
+            copyToClipboard(text);
+            this.style.backgroundColor = 'green';
+            this.style.border = '1px solid green';
+        });
+        area.appendChild(button);
+    }
+
+    function copyToClipboard(str) {
+        const el = document.createElement('textarea');
+        el.value = str;
+        el.setAttribute('readonly', '');
+        el.style.position = 'absolute';
+        el.style.left = '-9999px';
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+    }
+
+    function findSceneSpan() {
+        const genreRows = document.querySelectorAll('tr.release_genres');
+        for (let row of genreRows) {
+            const th = row.querySelector('th');
+            if (th && th.textContent.trim().toLowerCase() === 'scenes') {
+                return row.querySelector('.release_pri_genres');
+            }
+        }
+        return null;
     }
 })();
-
-function copyStringToClipboard(str) {
-    var el = document.createElement('textarea');
-    el.value = str;
-    el.setAttribute('readonly', '');
-    el.style = {position: 'absolute', left: '-9999px'};
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
-}
-
-function createString(pri_genres, sec_genres) {
-    var genres = [];
-
-    if (pri_genres) {
-      for (let index = 0; index < pri_genres.children.length; index++) {
-          genres.push(getGenreStringFromElement(pri_genres.children[index]));
-      }
-    }
-
-    if (sec_genres) {
-      for (let index = 0; index < sec_genres.children.length; index++) {
-          genres.push(getGenreStringFromElement(sec_genres.children[index]));
-      }
-    }
-
-    return genres.join('; ');
-}
-
-function getGenreStringFromElement(element) {
-    var result;
-    if (element.innerHTML.startsWith("<a")) {
-      result = element.innerText;
-    } else {
-      result = element.innerHTML;
-    }
-    return result.replace("&amp;", "&").replace(", ", "");
-}
-
-function createButton(area, number, complete_string, margin) {
-    area.innerHTML += "<button class='copy_btn' id='pri_button" + number + "'>copy genres</button>";
-    var pri_button = document.getElementById('pri_button' + number);
-    pri_button.style.cssText = "color: black;border: 1px var(--gen-blue-med) solid;background-color: var(--gen-blue-med);text-decoration: none;border-radius: 3px;padding: 2px;margin-left: " + margin + "px;max-width: 140px;";
-    pri_button.addEventListener('click', function() {
-      copyStringToClipboard(complete_string);
-      this.style.backgroundColor='green';
-      this.style.border='1px green solid';
-    });
-}

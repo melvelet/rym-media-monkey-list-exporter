@@ -277,7 +277,7 @@
                   return url;
               }
         },
-        "MM": {
+        "MeMo": {
             linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
                 if (format === "cd") {
                    formatText = "Audio CD,";
@@ -289,9 +289,60 @@
                    formatText = "produkte-C0";
                 }
 
-                // Construct the base Kleinanzeigen URL
+                // Construct the base Medimops URL
                 let url = `https://www.medimops.de/${formatText}/?fcIsSearch=1&listorder=asc&listorderby=oxvarminprice&searchparam=${artistName}`;
                 if (releaseSetting === 'release') url += `+${releaseTitle}`;
+
+                // Return the constructed URL
+                return url;
+            }
+        },
+        "MeMa": {
+            linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
+                if (format === "cd") {
+                   formatText = "CD";
+                } else if (format === "vinyl") {
+                   formatText = "Vinyl OR LP";
+                } else {
+                   formatText = "";
+                }
+
+                // Construct the base MediaMarkt URL
+                let url = `https://www.mediamarkt.de/de/search.html?productType=Musik&query=${artistName}`;
+                if (releaseSetting === 'release') url += `+${releaseTitle}`;
+                if (formatText !== '') url += `&mediaFormat=${formatText}`;
+
+                // Return the constructed URL
+                return url;
+            }
+        },
+        "JPC": {
+            linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
+                if (format === "cd") {
+                   formatText = "CD";
+                } else if (format === "vinyl") {
+                   formatText = "LP";
+                } else if (format === "cassette") {
+                   formatText = "MC";
+                } else {
+                   formatText = "";
+                }
+
+                // Construct the base JPC URL
+                let url = `https://www.jpc.de/s/${artistName}`;
+                if (releaseSetting === 'release') url += `+${releaseTitle}`;
+                if (formatText !== '') url += `&medium=${formatText}`;
+
+                // Return the constructed URL
+                return url;
+            }
+        },
+        "RB": {
+            linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
+                // Construct the base Rebuy URL
+                let url = `https://www.rebuy.de/kaufen/suchen?c=83&q=${artistName}`;
+                if (releaseSetting === 'release') url += `+${releaseTitle}`;
+                if (format === "cd") url += `&f_prop_gr_disc_type=CD`;
 
                 // Return the constructed URL
                 return url;
@@ -378,7 +429,7 @@
        // Get the necessary elements with null checks
        const titleElement = item.querySelector('.page_charts_section_charts_item_link');
        const artistElement = item.querySelector('.page_charts_section_charts_item_credited_links_primary');
-       const mediaLinksContainer = item.querySelector('.page_charts_section_charts_item_media_links');
+       const mediaLinksContainer = item.querySelector('.page_charts_section_charts_item_info');
 
        // Early return if required elements don't exist
        if (!titleElement || !artistElement || !mediaLinksContainer) {

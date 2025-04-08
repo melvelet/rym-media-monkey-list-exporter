@@ -4,7 +4,7 @@ import file_handler
 from pathlib import Path
 
 
-class rym_list_parser(object):
+class RymListParser(object):
     def __init__(self, config):
         self.config = config
 
@@ -134,6 +134,6 @@ if __name__ == "__main__":
     list_path = abspath / source_path / playlist_name
     os.chdir(list_path)
 
-    rym_list_parser = rym_list_parser(config)
+    rym_list_parser = RymListParser(config)
     parsed_list = rym_list_parser.parse_list(playlist_name)
     file_handler.save_to_yaml(parsed_list, playlist_name)

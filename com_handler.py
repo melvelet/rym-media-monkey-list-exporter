@@ -1,33 +1,42 @@
 import win32com.client
 import re
 
-from typing import Set
+from typing import Set, Tuple, Union
 
 from logger import Logger
+from rym_id_list import RymIdInMMDatabaseListManager
 
 
 def get_found_via_str(found_via_type, songs, release):
-    found_releases: Set[str] = set([])
+    found_releases: Set[Tuple[str, str]] = get_found_releases(songs, release)
     result_str = ''
+    artist = release['artist'][0] if type(release['artist']) == list else release['artist']
+    for rel in found_releases:
+        if len(found_releases) == 1:
+            if release['release_type'] == 'single' \
+                    and str.lower(artist) == str.lower(rel[0]) \
+                    and str.lower(release['release_title']).startswith(str.lower(rel[1])):
+                continue
+            elif release['release_type'] != 'single' \
+                    and str.lower(artist) == str.lower(rel[0]) \
+                    and str.lower(release['release_title']) == str.lower(rel[1]):
+                continue
+
+        if not result_str:
+            result_str += f"{found_via_type} as:"
+        result_str += f"\n\t\t\t{rel[0]} - {rel[1]}"
+
+    return result_str if result_str else found_via_type
+
+
+def get_found_releases(songs, release):
+    found_releases: Set[Tuple[str, str]] = set([])
     for i in range(len(songs)):
         if release['release_type'] == 'single':
-            if str.lower(release['release_title']).startswith(str.lower(songs[i].Title)) \
-                    and str.lower(release['artist']) == str.lower(songs[i].Artist.Name):
-                continue
-            else:
-                found_releases.add(f"{songs[i].Artist.Name} - {songs[i].Title}")
+            found_releases.add((songs[i].Artist.Name, songs[i].Title))
         else:
-            if str.lower(release['release_title']) == str.lower(songs[i].Album.Name) \
-                    and str.lower(release['artist']) == str.lower(songs[i].Artist.Name):
-                continue
-            else:
-                found_releases.add(f"{songs[i].Artist.Name} - {songs[i].Album.Name}")
-
-    if found_releases:
-        result_str += f"{found_via_type} as:"
-        for rel in found_releases:
-            result_str += f"\n\t\t\t{rel}"
-    return result_str if result_str else found_via_type
+            found_releases.add((songs[i].Artist.Name, songs[i].Album.Name))
+    return found_releases
 
 
 def print_songs_iterator(songs):
@@ -47,13 +56,14 @@ def print_song_list(song_list):
 
 
 class ComHandler(object):
-    def __init__(self, config):
+    def __init__(self, config, rym_id_in_mm_list_manager=None):
         self.found_first_time = 0
         self.found = 0
         self.SDB = None
         self.db = None
         self.config = config
         self.logger = Logger()
+        self.rym_id_in_mm_list_manager: Union[RymIdInMMDatabaseListManager, None] = rym_id_in_mm_list_manager
 
     def open_com(self):
         self.SDB = win32com.client.Dispatch("SongsDB.SDBApplication")
@@ -113,7 +123,10 @@ class ComHandler(object):
                 self.logger.log(f"Found: {i}. {release['artist']} - {release['release_title']} | "
                                 f"found via {found_via_str}")
                 self.found += 1
-                if found_via.startswith('name'):
+                if self.rym_id_in_mm_list_manager:
+                    self.rym_id_in_mm_list_manager.add_id(
+                        release_to_add=release, releases_in_mm=get_found_releases(songs_release, release))
+                if found_via_type == 'name':
                     songs_release.UpdateAll()
                     self.found_first_time += 1
                 self.__merge_song_lists(songs, songs_release)

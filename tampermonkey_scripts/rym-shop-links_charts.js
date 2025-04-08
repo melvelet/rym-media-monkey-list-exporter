@@ -439,27 +439,21 @@
        const cleanReleaseTitle = getCleanedString(titleElement);
        const cleanArtistName = getCleanedString(artistElement);
 
-       // Create container for shop links
-       const linksContainer = document.createElement('div');
-       linksContainer.className = 'media_link_container';
-       linksContainer.style.marginTop = '0.5em';
-       linksContainer.style.display = 'flex';
-       linksContainer.style.justifyContent = 'flex-end'; // Added to align content to the right
-
        // Add shop links based on title and artist
        const shopLinks = createShopLinks(cleanReleaseTitle, cleanArtistName);
-       linksContainer.appendChild(shopLinks);
 
        // Insert links into the media links container
-       mediaLinksContainer.appendChild(linksContainer);
+       mediaLinksContainer.appendChild(shopLinks);
    }
 
    function createShopLinks(title, artist) {
        const container = document.createElement('div');
+       container.className = 'shop_button_container';
+       container.style.marginTop = '0.5em';
        container.style.display = 'flex';
        container.style.flexDirection = 'row';
        container.style.gap = '5px';
-       container.style.justifyContent = 'flex-end'; // Changed from flex-start to flex-end
+       container.style.justifyContent = 'left';
        container.style.width = '100%'; // Added to ensure full width
 
        for (const [shopName, shop] of Object.entries(shopLinks)) {
@@ -470,10 +464,12 @@
            shopButton.style.backgroundColor = '#d3d3d3';
            shopButton.style.textDecoration = 'none';
            shopButton.style.borderRadius = '3px';
-           shopButton.style.padding = '2px 6px';
+           shopButton.style.padding = '2px';
            shopButton.style.fontSize = '0.8em';
            shopButton.style.cursor = 'pointer';
            shopButton.style.whiteSpace = 'nowrap';
+           //shopButton.style.width = '30px';
+           shopButton.style.height = '25px';
            shopButton.textContent = shopName;
 
            const shopUrl = shop.linkBuilder(title, artist, format, releaseSetting);
@@ -557,9 +553,13 @@
 
     // Function to update shop links for all chart items
     function updateAllChartShopLinks() {
-        // Remove only shop buttons
+        // Remove existing shop buttons
         const existingButtons = document.querySelectorAll('.shop-button');
         existingButtons.forEach(button => button.remove());
+
+        // Remove existing shop button containers
+        const existingContainers = document.querySelectorAll('.shop_button_container');
+        existingContainers.forEach(container => container.remove());
 
         // Add new shop links
         const chartItems = document.querySelectorAll('.page_charts_section_charts_item');

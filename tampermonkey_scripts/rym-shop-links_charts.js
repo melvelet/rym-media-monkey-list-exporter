@@ -193,17 +193,19 @@
                 return url;
             }
         },
-//        "EB": {
-//              linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
-//                  // eBay link structure
-//                  let baseLink = "https://www.ebay.de/sch/i.html?_nkw=";
-//                  let formattedArtist = artistName.replace(/\s+/g, "+");
-//                  let formattedRelease = releaseTitle.replace(/\s+/g, "+");
-//                  let formattedFormat = format && format !== 'general' ? `+${format}` : ""; // Format (cd, vinyl, etc.)
-//                  let releaseType = releaseSetting === 'band' ? '' : `+${formattedRelease}`; // If Band, no release title
-//                  return `${baseLink}${formattedArtist}${releaseType}${formattedFormat}`;
-//              }
-//        },
+        "CJP": {
+              linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
+                  // Construct the base CDJapan URL
+                  let url = `https://www.cdjapan.co.jp/searchuni?`;
+                  if (format !== 'general') url += `term.media_format=${format}`;
+                  url += `&q=${artistName}`;
+                  if (releaseSetting === 'release') url += `+${releaseTitle}`;
+                  url += `&opt.exclude_eoa=on`;
+
+                  // Return the constructed URL
+                  return url;
+              }
+        },
         "DC": {
               linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
                   let formatText = ""; // Default to empty string for general
@@ -229,6 +231,17 @@
                   return url;
               }
         },
+        "EB": {
+              linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
+                  // eBay link structure
+                  let baseLink = "https://www.ebay.de/sch/i.html?_nkw=";
+                  let formattedArtist = artistName.replace(/\s+/g, "+");
+                  let formattedRelease = releaseTitle.replace(/\s+/g, "+");
+                  let formattedFormat = format && format !== 'general' ? `+${format}` : ""; // Format (cd, vinyl, etc.)
+                  let releaseType = releaseSetting === 'band' ? '' : `+${formattedRelease}`; // If Band, no release title
+                  return `${baseLink}${formattedArtist}${releaseType}${formattedFormat}`;
+              }
+        },
         "HHV": {
               linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
                   let formatText = ""; // Default to empty string for general
@@ -251,70 +264,27 @@
                   return url;
               }
         },
-        "CJP": {
+        "ID": {
               linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
-                  // Construct the base CDJapan URL
-                  let url = `https://www.cdjapan.co.jp/searchuni?`;
-                  if (format !== 'general') url += `term.media_format=${format}`;
-                  url += `&q=${artistName}`;
+                  let formatText = ""; // Default to empty string for general
+
+                  if (format === "cd") {
+                      formatText = "ProductCategory/9891";
+                  } else if (format === "vinyl") {
+                      formatText = "ProductCategory/9895";
+                  } else if (format === "cassette") {
+                      formatText = "ProductCategory/9891F3931694";
+                  } else if (format === "general") {
+                      formatText = "MainSearchProductCategory";
+                  }
+
+                  // Construct the base HHV URL
+                  let url = `https://www.idealo.de/preisvergleich/${formatText}.html?q=${artistName}`;
                   if (releaseSetting === 'release') url += `+${releaseTitle}`;
-                  url += `&opt.exclude_eoa=on`;
 
                   // Return the constructed URL
                   return url;
               }
-        },
-        "KA": {
-              linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
-                  // Construct the base Kleinanzeigen URL
-                  let url = `https://www.kleinanzeigen.de/s-musik-cds/${artistName}`;
-                  if (releaseSetting === 'release') url += `+${releaseTitle}`;
-                  if (format !== 'general' && format !== 'cassette') url += `+${format}`;
-                  if (format === 'cassette') url += `+kassette`;
-                  url += `/k0c78`;
-
-                  // Return the constructed URL
-                  return url;
-              }
-        },
-        "MeMo": {
-            linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
-                if (format === "cd") {
-                   formatText = "Audio CD,";
-                } else if (format === "vinyl") {
-                   formatText = "Vinyl,";
-                } else if (format === "cassette") {
-                   formatText = "Hörkassette,";
-                } else if (format === "general") {
-                   formatText = "produkte-C0";
-                }
-
-                // Construct the base Medimops URL
-                let url = `https://www.medimops.de/${formatText}/?fcIsSearch=1&listorder=asc&listorderby=oxvarminprice&searchparam=${artistName}`;
-                if (releaseSetting === 'release') url += `+${releaseTitle}`;
-
-                // Return the constructed URL
-                return url;
-            }
-        },
-        "MeMa": {
-            linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
-                if (format === "cd") {
-                   formatText = "CD";
-                } else if (format === "vinyl") {
-                   formatText = "Vinyl OR LP";
-                } else {
-                   formatText = "";
-                }
-
-                // Construct the base MediaMarkt URL
-                let url = `https://www.mediamarkt.de/de/search.html?productType=Musik&query=${artistName}`;
-                if (releaseSetting === 'release') url += `+${releaseTitle}`;
-                if (formatText !== '') url += `&mediaFormat=${formatText}`;
-
-                // Return the constructed URL
-                return url;
-            }
         },
         "JPC": {
             linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
@@ -337,12 +307,83 @@
                 return url;
             }
         },
+        "KA": {
+              linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
+                  // Construct the base Kleinanzeigen URL
+                  let url = `https://www.kleinanzeigen.de/s-musik-cds/${artistName}`;
+                  if (releaseSetting === 'release') url += `+${releaseTitle}`;
+                  if (format !== 'general' && format !== 'cassette') url += `+${format}`;
+                  if (format === 'cassette') url += `+kassette`;
+                  url += `/k0c78`;
+
+                  // Return the constructed URL
+                  return url;
+              }
+        },
+        "MeMa": {
+            linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
+                if (format === "cd") {
+                   formatText = "CD";
+                } else if (format === "vinyl") {
+                   formatText = "Vinyl OR LP";
+                } else {
+                   formatText = "";
+                }
+
+                // Construct the base MediaMarkt URL
+                let url = `https://www.mediamarkt.de/de/search.html?productType=Musik&query=${artistName}`;
+                if (releaseSetting === 'release') url += `+${releaseTitle}`;
+                if (formatText !== '') url += `&mediaFormat=${formatText}`;
+
+                // Return the constructed URL
+                return url;
+            }
+        },
+        "MeMo": {
+            linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
+                if (format === "cd") {
+                   formatText = "Audio CD,";
+                } else if (format === "vinyl") {
+                   formatText = "Vinyl,";
+                } else if (format === "cassette") {
+                   formatText = "Hörkassette,";
+                } else if (format === "general") {
+                   formatText = "produkte-C0";
+                }
+
+                // Construct the base Medimops URL
+                let url = `https://www.medimops.de/${formatText}/?fcIsSearch=1&listorder=asc&listorderby=oxvarminprice&searchparam=${artistName}`;
+                if (releaseSetting === 'release') url += `+${releaseTitle}`;
+
+                // Return the constructed URL
+                return url;
+            }
+        },
         "RB": {
             linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
                 // Construct the base Rebuy URL
                 let url = `https://www.rebuy.de/kaufen/suchen?c=83&q=${artistName}`;
                 if (releaseSetting === 'release') url += `+${releaseTitle}`;
                 if (format === "cd") url += `&f_prop_gr_disc_type=CD`;
+
+                // Return the constructed URL
+                return url;
+            }
+        },
+        "Sat": {
+            linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
+                if (format === "cd") {
+                   formatText = "CD";
+                } else if (format === "vinyl") {
+                   formatText = "Vinyl OR LP";
+                } else {
+                   formatText = "";
+                }
+
+                // Construct the base Saturn URL
+                let url = `https://www.saturn.de/de/search.html?productType=Musik&query=${artistName}`;
+                if (releaseSetting === 'release') url += `+${releaseTitle}`;
+                if (formatText !== '') url += `&mediaFormat=${formatText}`;
 
                 // Return the constructed URL
                 return url;

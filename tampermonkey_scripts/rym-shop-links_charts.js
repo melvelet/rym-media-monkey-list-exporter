@@ -234,7 +234,7 @@
         "EB": {
               linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
                   // eBay link structure
-                  let baseLink = "https://www.ebay.de/sch/i.html?_nkw=";
+                  let baseLink = "https://www.ebay.de/sch/11233/i.html?_nkw=";
                   let formattedArtist = artistName.replace(/\s+/g, "+");
                   let formattedRelease = releaseTitle.replace(/\s+/g, "+");
                   let formattedFormat = format && format !== 'general' ? `+${format}` : ""; // Format (cd, vinyl, etc.)
@@ -310,7 +310,7 @@
         "KA": {
               linkBuilder: (releaseTitle, artistName, format, releaseSetting) => {
                   // Construct the base Kleinanzeigen URL
-                  let url = `https://www.kleinanzeigen.de/s-musik-cds/${artistName}`;
+                  let url = `https://www.kleinanzeigen.de/s-musik-cds/sortierung:preis/${artistName}`;
                   if (releaseSetting === 'release') url += `+${releaseTitle}`;
                   if (format !== 'general' && format !== 'cassette') url += `+${format}`;
                   if (format === 'cassette') url += `+kassette`;
